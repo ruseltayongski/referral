@@ -114,8 +114,8 @@ class PrintNewFormCtrl extends Controller
     public function printNewFormPDF($pdf,$patient_id,$data,$comor_dataArray, $allergies_dataArray, $heredo_dataArray,$patients_name,$form_type){
         
         // DIAGNOSIS
-       
-          if (!empty($data->form['form']->other_diagnoses) || !empty($data->form['form']->other_diagnoses) || !empty($data->form['form']->diagnosis)) {
+
+          if (!empty($data->form['form']->other_diagnoses) || !empty($data->form['form']->other_diagnoses) || !empty($data->form['form']->diagnosis) || !empty($data->icd[0])) {
             $this->titleHeader($pdf, "DIAGNOSIS");
             if (isset($data->icd[0])) {
                 $pdf->SetTextColor(102, 56, 0);
@@ -670,16 +670,16 @@ class PrintNewFormCtrl extends Controller
     }
 
     public function printNormal($pdf, 
-    $x, 
-    $patient_address, 
-    $woman_name, 
-    $tracking_data, 
-    $referring_facility_normal, 
-    $referred_to_normal, 
-    $department_normal, 
-    $patients_form, 
-    $patients_name, 
-    $data){
+        $x, 
+        $patient_address, 
+        $woman_name, 
+        $tracking_data, 
+        $referring_facility_normal, 
+        $referred_to_normal, 
+        $department_normal, 
+        $patients_form, 
+        $patients_name, 
+        $data){
             $pdf->SetFont('Arial', 'B', 12);
             $pdf->Cell(0, 0, "CENTRAL VISAYAS HEALTH REFERRAL SYSTEM", 0, "", "C");
             $pdf->ln();
