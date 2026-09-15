@@ -121,8 +121,9 @@ class PrintNewFormCtrl extends Controller
                 $pdf->SetTextColor(102, 56, 0);
                 $pdf->SetFont('Arial', 'I', 10);
                 foreach ($data->icd as $icd) {
+                    // dd($icd);
                    if(!empty($icd->code)&&!empty($icd->description)){
-                    $pdf->MultiCell(0, 7, self::black($pdf, "ICD-10: ") . "\n" . self::staticGreen($pdf, utf8_decode($icd->description)), 1, 'L');}
+                    $pdf->MultiCell(0, 7, self::black($pdf, "ICD-10: ") . "\n" . self::staticGreen($pdf, utf8_decode($icd->code . " - " . $icd->description)), 1, 'L');}
                 }
                 $pdf->Ln();
             }
