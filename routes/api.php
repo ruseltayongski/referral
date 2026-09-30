@@ -50,3 +50,4 @@ Route::middleware('signed')->group(function () {
     Route::post('/reco/{code}/{sender_id}/message', [FeedbackController::class, 'guestSaveFeedback'])
         ->name('api.reco.message.send');
 });
+Route::post('submit/recommendation/{code}', 'TelemedicineApiCtrl@saveMedCert');

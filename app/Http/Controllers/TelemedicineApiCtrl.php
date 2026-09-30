@@ -2013,4 +2013,25 @@ class TelemedicineApiCtrl extends Controller
             'user_id' => $activity
         ]);
     }
+    public function saveMedCert(Request $request, $code){
+    
+        $request->validate([
+            'diagnosis' => 'required|string',
+            'recommendation' => 'required|string',
+        ]);
+
+        $patientForm = PatientForm::updateOrCreate(
+            ['code' => $code],
+            [
+                'other_diagnoses' => $request->diagnosis,
+                'reco_summary' => $request->recommendation,
+            ]
+        );
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Medical certificate saved successfully',
+            'data' => $patientForm
+        ]);
+    }
 }

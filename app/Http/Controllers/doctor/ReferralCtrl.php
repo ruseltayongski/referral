@@ -608,6 +608,7 @@ class ReferralCtrl extends Controller
                     : null;
 
                     $form->appointment_time = $appointmentDate ? $appointmentDate->appointed_time : null;
+                    $form->appointment_id = $appointmentId;
                 }
             }
 

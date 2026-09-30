@@ -9,6 +9,7 @@ import PDFViewerModal from "./PDFViewerModal.vue";
 import FormReferralComponent from "./FormReferralComponent.vue";
 import ScheduleModal from "./scheduleModal.vue";
 import PatientMessenger from "./PatientMessenger.vue";
+import MedCertModal from './MedCertModal.vue';
 
 let baseUrlfeedback = `referral/doctor/vue/feedback`;
 let doctorFeedback = `referral/doctor/feedback`;
@@ -21,6 +22,7 @@ export default {
     PDFViewerModal,
     FormReferralComponent,
     ScheduleModal,
+    MedCertModal,
     PatientMessenger,
   },
   data() {
@@ -146,6 +148,7 @@ export default {
       messengerFetchUrl: null,
       messengerSendUrl: null,
       patientDisplayName: null,
+      showTooltipMedCert: false,
     };
   },
   mounted() {
@@ -275,6 +278,12 @@ export default {
   //   },
   // },
   methods: {
+    openMedCertModal() {
+      this.$refs.medCertModal.show(this.referral_code);
+    },
+    onCertGenerated(data) {
+      console.log('Medical certificate generated:', data);
+    },
     // async viewReco(data, videoApp = 0) {
     //   const code = data.data("code");
     //   this.currentCode = code;
@@ -1459,6 +1468,34 @@ export default {
           console.error(error);
         });
     },
+    generateMedicalCertificate() {
+      // const url = `${this.baseUrl}/api/video/medical-certificate/check`;
+      // const payload = {
+      //   activity_id:  this.activity_id,
+      //   referred_md: this.form.md_referred_id,
+      // }
+
+      // axios
+      //   .post(url, payload)
+      //   .then((response) => {
+          // if (response.data.id) {
+            // console.log("user:" + this.user.id + " appointmentID" + this.form.appointment_id);
+            // console.log("forms:", JSON.stringify(this.form, null, 2));
+          
+            this.PdfUrl = `${this.baseUrl}/doctor/print/medicalcert/${this.activity_id}/${this.form.md_referred_id}/${this.form.appointment_id}/${this.tracking_id}`;
+            this.$nextTick(() => {
+              this.$refs.pdfViewer.openModal();
+            });
+          // } else {
+          //   Lobibox.alert("error", {
+          //     msg: "No medical certificate has been created by the referring doctor",
+          //   });
+          // }
+        // })
+        // .catch((error) => {
+        //   console.log(error);
+        // });
+    },
  
     generateLabrequest() {
       const url     = `${this.baseUrl}/api/check/labresult`;
@@ -1794,6 +1831,28 @@ export default {
                     <i class="bi bi-chat-dots-fill"></i>
                   </button>
                 </div>
+                <div
+                  class="button-container"
+                  v-if="user && String(user.level).toLowerCase() === 'doctor'"
+                >
+                  <div
+                    v-if="!isMobileDevice && showTooltipMedCert"
+                    class="tooltip-text"
+                    style="background-color: #198754"
+                  >
+                    Medical Certificate
+                  </div>
+                  <button
+                    class="btn btn-md med-cert-button"
+                    style="background-color: #198754; border-color: #198754; color: #fff;"
+                    type="button"
+                    @click="openMedCertModal"
+                    @mouseover="showTooltipMedCert = true"
+                    @mouseleave="showTooltipMedCert = false"
+                  >
+                    <i class="bi bi-file-earmark-medical-fill"></i>
+                  </button>
+                </div>
               </div>
             </div>
           </Transition>
@@ -1855,6 +1914,15 @@ export default {
                     @click="generatePrescription()"
                   >
                     <i class="bi bi-prescription"></i> Generate Prescription
+                  </button>
+                </div>
+                <div class="col-6">
+                  <button
+                    class="btn btn-success btn-md w-100 ml-2"
+                    type="button"
+                    @click="generateMedicalCertificate()"
+                  >
+                    <i class="bi bi-prescription"></i> Generate Medical Certificate
                   </button>
                 </div>
                 <div class="col-6">
@@ -1939,6 +2007,10 @@ export default {
       :doctorId="user.id" 
       :username="user.username" 
     />
+    <med-cert-modal
+      ref="medCertModal"
+      @generated="onCertGenerated"
+    ></med-cert-modal>
     <patient-messenger
       v-if="showPatientMessenger && messengerFetchUrl"
       :code="referral_code"

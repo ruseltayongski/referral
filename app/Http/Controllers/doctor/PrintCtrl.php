@@ -5,6 +5,7 @@ namespace App\Http\Controllers\doctor;
 use Anouar\Fpdf\Fpdf;
 use App\Activity;
 use App\Tracking;
+use App\AppointmentSchedule;
 use App\Icd;
 use App\LabRequest;
 use App\User;
@@ -46,90 +47,78 @@ class PDFPrescription extends FPDF
     {
         $this->SetTextColor(0);
         $headerPath = realpath(__DIR__.'/../../../../resources/img/video/wave_header.png');
-        $this->Image($headerPath, 0, 0, 210, 35);
+        $this->Image($headerPath, 0, 0, 210, 22);
         $imagePath = realpath(__DIR__.'/../../../../resources/img/video/doh-logo.png');
-        $this->Image($imagePath, 10, 10, 22);
+        $this->Image($imagePath, 10, 6, 16);
 
         $this->Setx(10);
-        $this->SetFont('Times', '', 9);
-        $this->Cell(0, 4, 'Republic of the Philippines', 0, 1, 'C');
+        $this->SetFont('Times', '', 8);
+        $this->Cell(0, 3, 'Republic of the Philippines', 0, 1, 'C');
         $this->Setx(10);
-        $this->SetFont('Times', '', 12);
-        $this->Cell(0, 5, 'Department of Health', 0, 1, 'C');
+        $this->SetFont('Times', '', 10);
+        $this->Cell(0, 4, 'Department of Health', 0, 1, 'C');
         $this->Setx(10);
         $this->SetFont('Times', 'B', 14);
-        $this->Cell(0, 6, 'CENTRAL VISAYAS CENTER for HEALTH DEVELOPMENT', 0, 1, 'C');
-        $this->Ln(15);
+        $this->Cell(0, 5, 'CENTRAL VISAYAS CENTER for HEALTH DEVELOPMENT', 0, 1, 'C');
+        $this->Ln(4);
 
         $this->Setx(10);
-        $this->SetFont('Arial', 'B', 13);
-        $this->Cell(0, 2, iconv('UTF-8', 'windows-1252', $this->header), 0, 1, 'C');
+        $this->SetFont('Arial', 'B', 10);
+        $this->Cell(0, 4, iconv('UTF-8', 'windows-1252', $this->header), 0, 1, 'C');
         $this->Setx(10);
-        $this->SetFont('Arial', '', 9);
-        $this->Cell(0, 10, iconv('UTF-8', 'windows-1252', $this->department), 0, 1, 'C');
-        $this->Ln(5);
+        $this->SetFont('Arial', '', 8);
+        $this->Cell(0, 5, iconv('UTF-8', 'windows-1252', $this->department), 0, 1, 'C');
+        $this->Ln(2);
 
         $this->Setx(10);
-        $this->SetFont('Arial','B',10);
-        $this->Cell(0,0, iconv('UTF-8', 'windows-1252', $this->facility), 0,"","C");
-        $this->Ln();
+        $this->SetFont('Arial', 'B', 9);
+        $this->Cell(0, 4, iconv('UTF-8', 'windows-1252', $this->facility), 0, 1, 'C');
 
         $this->Setx(10);
-        $this->SetFont('Arial','',9);
-        $this->Cell(0,12, iconv('UTF-8', 'windows-1252', $this->facility_address), 0,"","C");
-        $this->Ln();
+        $this->SetFont('Arial', '', 8);
+        $this->Cell(0, 4, iconv('UTF-8', 'windows-1252', $this->facility_address), 0, 1, 'C');
         $this->Setx(10);
-        $this->Cell(0,0, iconv('UTF-8', 'windows-1252', $this->facility_email), 0,"","C");
-        $this->Ln();
+        $this->Cell(0, 4, iconv('UTF-8', 'windows-1252', $this->facility_email), 0, 1, 'C');
         $this->Setx(10);
-        $this->Cell(0, 12, $this->facility_contact, 0, "", "C");
+        $this->Cell(0, 4, $this->facility_contact, 0, 1, 'C');
 
-        $this->Ln(13);
+        $this->Ln(2);
         $this->Line(10, $this->GetY(), 200, $this->GetY());
         $this->Ln(0.5);
         $this->Line(10, $this->GetY(), 200, $this->GetY());
-        $this->Ln(3);
+        $this->Ln(2);
     }
 
     public function Footer() {
-
         $headerPath = realpath(__DIR__.'/../../../../resources/img/video/wave_footer.png');
-        $this->Image($headerPath, 0, 262, 210, 35);
+        $this->Image($headerPath, 0, 275, 210, 22);
 
-        $this->SetY(-40);   
+        $this->SetY(-28);
         $this->Setx(105);
-        $this->SetTextColor(0,0,0);
+        $this->SetTextColor(0, 0, 0);
 
-        $this->SetFont('Arial', 'B', 11);
+        $this->SetFont('Arial', 'B', 9);
         $headerLength = strlen($this->header);
         if ($headerLength > 41) {
-            $this->SetFont('Arial', 'B', 9);    
-        }
-        if ($headerLength > 49) {
-            $this->SetFont('Arial', 'B', 8);    
+            $this->SetFont('Arial', 'B', 8);
         }
         $this->SetUnderline(true);
-        $this->Cell(0, 10, iconv('UTF-8', 'windows-1252', $this->header), 0, 1, '');
+        $this->Cell(0, 5, iconv('UTF-8', 'windows-1252', $this->header), 0, 1, '');
 
-        $this->SetFont('Arial', '', 10);
+        $this->SetFont('Arial', '', 8);
         $this->Setx(105);
-        $this->Cell(0, 0,"LICENSE NO.: ".$this->license, 0, 1, '');
-        $this->Ln(4);
+        $this->Cell(0, 4, "LICENSE NO.: ".$this->license, 0, 1, '');
         $this->Setx(105);
-        $this->Cell(0, 0,'PTR NO.:', 0, 1, '');
+        $this->Cell(0, 4, 'PTR NO.:', 0, 1, '');
 
         if (is_file($this->signature_path)) {
-            // $this->Image($this->signature_path, 105, 245, 50, 0);
-            if ($headerLength <= 13) {
-                $this->Image($this->signature_path, 105 - $headerLength, 245, 50, 0);
-            }else {
-                $this->Image($this->signature_path, 105, 245, 50, 0);
-            }    
+            $x = $headerLength <= 13 ? 105 - $headerLength : 105;
+            $this->Image($this->signature_path, $x, 258, 38, 0);
         }
-        $this->SetY(-15);
+        $this->SetY(-10);
         $this->Setx(10);
-        $this->SetFont('Arial', 'I', 8);
-        $this->Cell(0, 10, 'Page ' . $this->PageNo() . '/{nb}', 0, 0, 'C');
+        $this->SetFont('Arial', 'I', 7);
+        $this->Cell(0, 6, 'Page ' . $this->PageNo() . '/{nb}', 0, 0, 'C');
     }
 
     public function SetUnderline($value)
@@ -162,6 +151,115 @@ class PDFPrescription extends FPDF
     public function GetPageHeight()
     {
         return $this->h;
+    }
+        public function RoundedRect(
+        $x,
+        $y,
+        $w,
+        $h,
+        $r,
+        $style = ''
+    ) {
+        $k = $this->k;
+        $hp = $this->h;
+
+        if ($style == 'F') {
+            $op = 'f';
+        } elseif ($style == 'FD' || $style == 'DF') {
+            $op = 'B';
+        } else {
+            $op = 'S';
+        }
+
+        $MyArc = 4 / 3 * (sqrt(2) - 1);
+
+        $this->_out(sprintf(
+            '%.2F %.2F m',
+            ($x + $r) * $k,
+            ($hp - $y) * $k
+        ));
+
+        $this->_out(sprintf(
+            '%.2F %.2F l',
+            ($x + $w - $r) * $k,
+            ($hp - $y) * $k
+        ));
+
+        $this->_Arc(
+            $x + $w - $r * $MyArc,
+            $y,
+            $x + $w,
+            $y + $r * $MyArc,
+            $x + $w,
+            $y + $r
+        );
+
+        $this->_out(sprintf(
+            '%.2F %.2F l',
+            ($x + $w) * $k,
+            ($hp - ($y + $h - $r)) * $k
+        ));
+
+        $this->_Arc(
+            $x + $w,
+            $y + $h - $r * $MyArc,
+            $x + $w - $r * $MyArc,
+            $y + $h,
+            $x + $w - $r,
+            $y + $h
+        );
+
+        $this->_out(sprintf(
+            '%.2F %.2F l',
+            ($x + $r) * $k,
+            ($hp - ($y + $h)) * $k
+        ));
+
+        $this->_Arc(
+            $x + $r * $MyArc,
+            $y + $h,
+            $x,
+            $y + $h - $r * $MyArc,
+            $x,
+            $y + $h - $r
+        );
+
+        $this->_out(sprintf(
+            '%.2F %.2F l',
+            $x * $k,
+            ($hp - ($y + $r)) * $k
+        ));
+
+        $this->_Arc(
+            $x,
+            $y + $r * $MyArc,
+            $x + $r * $MyArc,
+            $y,
+            $x + $r,
+            $y
+        );
+
+        $this->_out($op);
+    }
+        protected function _Arc(
+        $x1,
+        $y1,
+        $x2,
+        $y2,
+        $x3,
+        $y3
+    ) {
+        $h = $this->h;
+
+        $this->_out(sprintf(
+            '%.2F %.2F %.2F %.2F %.2F %.2F c',
+            $x1 * $this->k,
+            ($h - $y1) * $this->k,
+            $x2 * $this->k,
+            ($h - $y2) * $this->k,
+            $x3 * $this->k,
+            ($h - $y3) * $this->k
+        ));
     }
 }
 
@@ -490,9 +588,6 @@ class PrintCtrl extends Controller
         
         // Reset font at the end
         $pdf->SetFont('Arial', '', 10);
-        
-
-
 
 
         // $rowText2 = "{$html}";
@@ -501,6 +596,736 @@ class PrintCtrl extends Controller
         $pdf->Output();
         exit;
     }
+    public function printMedicalCert($activity_id, $referred_md, $appointment_id, $tracking_id) {
+
+        $activity = Activity::find($activity_id);
+        $patient_form = (new ReferralCtrl)->normalFormTelemed($tracking_id);
+
+        
+        if ($activity->referred_from == 0){
+            $facility_data = Facility::select('name', 'address', 'contact', 'email')
+                ->where('id', $activity->referred_to)->first();
+            $doctor_data = User::select('fname', 'lname', 'mname')
+                ->where('id', $referred_md)->first();
+        }else{
+            $facility_data = Facility::select('name', 'address', 'contact', 'email')
+                ->where('id', $activity->referred_from)->first();
+        }
+        $header = 'Dr. '.$doctor_data->fname.' '.$doctor_data->mname.' '.$doctor_data->lname;
+        $department = 'OPD';
+        $appointment_data = AppointmentSchedule::where('id', $appointment_id)->first(['appointed_date', 'appointed_time']);
+        // dd($activity, $referred_md, $appointment_id, $header, $facility_data, $appointment_data, $patient_form);
+        $pdf = new PDFPrescription(
+            $header,
+            $department,
+            $facility_data->name,
+            $facility_data->address,
+            $facility_data->contact,
+            $facility_data->email,
+            $signature_path,
+            $facility->license
+        );
+
+        $pdf->AliasNbPages();
+        $pdf->setTitle($facility->name);
+        $pdf->AddPage();
+
+
+        // =====================================================
+        // COLORS
+        // =====================================================
+
+        $green = array(70, 126, 121);       // #467E79
+        $darkGreen = array(15, 76, 61);
+        $lightGreen = array(222, 250, 238);
+        $borderGreen = array(70, 190, 170);
+        $black = array(0, 0, 0);
+        $gray = array(100, 100, 100);
+
+
+        // =====================================================
+        // PAGE SETTINGS
+        // =====================================================
+
+        $pdf->SetMargins(15, 15, 15);
+        $pdf->SetAutoPageBreak(true, 30);
+
+        $pageWidth = $pdf->GetPageWidth();
+        $pageHeight = $pdf->GetPageHeight();
+
+        $left = 15;
+        $right = 15;
+        $contentWidth = $pageWidth - $left - $right;
+
+
+        // =====================================================
+        // MEDICAL CERTIFICATE HEADER
+        // =====================================================
+
+        $pdf->Ln(3);
+
+        $pdf->SetTextColor($green[0], $green[1], $green[2]);
+
+        $pdf->SetFont('Arial', 'B', 20);
+
+        $pdf->Cell(
+            0,
+            8,
+            "MEDICAL CERTIFICATE",
+            0,
+            1,
+            'C'
+        );
+
+
+        // TELEMEDICINE BADGE
+
+        $badgeWidth = 62;
+        $badgeHeight = 10;
+
+        $badgeX = ($pageWidth - $badgeWidth) / 2;
+        $badgeY = $pdf->GetY();
+
+        $pdf->SetFillColor(
+            $green[0],
+            $green[1],
+            $green[2]
+        );
+
+        $pdf->RoundedRect(
+            $badgeX,
+            $badgeY,
+            $badgeWidth,
+            $badgeHeight,
+            5,
+            'F'
+        );
+
+        $pdf->SetTextColor(255, 255, 255);
+
+        $pdf->SetFont('Arial', 'B', 14);
+
+        $pdf->SetXY($badgeX, $badgeY + 1);
+
+        $pdf->Cell(
+            $badgeWidth,
+            8,
+            "(TELEMEDICINE)",
+            0,
+            1,
+            'C'
+        );
+
+        $pdf->SetY($badgeY + $badgeHeight + 5);
+
+
+        // Reset color
+
+        $pdf->SetTextColor(
+            $black[0],
+            $black[1],
+            $black[2]
+        );
+
+
+        // =====================================================
+        // PATIENT INFORMATION
+        // =====================================================
+
+        $patient = $activity->patient;
+
+        $patient_age_year = ParamCtrl::getAge($patient->dob);
+        $patient_age_month = ParamCtrl::getMonths($patient->dob);
+
+        $patient_age = "";
+
+        if ($patient_age_year == 1) {
+            $patient_age .= $patient_age_year . " year ";
+        } else {
+            $patient_age .= $patient_age_year . " years ";
+        }
+
+        if ($patient_age_month['month'] == 1) {
+            $patient_age .= $patient_age_month['month'] . " month ";
+        } else {
+            $patient_age .= $patient_age_month['month'] . " months ";
+        }
+
+        if ($patient_age_month['days'] == 1) {
+            $patient_age .= $patient_age_month['days'] . " day old";
+        } else {
+            $patient_age .= $patient_age_month['days'] . " days old";
+        }
+
+        $formattedDate = date(
+            "m/d/Y",
+            strtotime($appointment_data->appointed_date)
+        );
+
+
+        // =====================================================
+        // PATIENT BOX
+        // =====================================================
+
+        $boxX = $left;
+        $boxY = $pdf->GetY();
+
+        $boxWidth = $contentWidth;
+        $boxHeight = 30;
+        $rowHeight = $boxHeight / 3; // 10mm per row
+
+
+        // Background
+
+        $pdf->SetFillColor(
+            $lightGreen[0],
+            $lightGreen[1],
+            $lightGreen[2]
+        );
+
+        $pdf->SetDrawColor(
+            $borderGreen[0],
+            $borderGreen[1],
+            $borderGreen[2]
+        );
+
+        $pdf->RoundedRect(
+            $boxX,
+            $boxY,
+            $boxWidth,
+            $boxHeight,
+            2,
+            'DF'
+        );
+
+
+        // Vertical divider (spans the two-column rows only)
+
+        $dividerX = $boxX + ($boxWidth * 0.72);
+
+        $pdf->SetDrawColor(255, 255, 255);
+        $pdf->SetLineWidth(0.6); // thicker inner white divider lines
+
+        $pdf->Line(
+            $dividerX,
+            $boxY,
+            $dividerX,
+            $boxY + ($rowHeight * 2)
+        );
+
+
+        // Horizontal dividers
+
+        $pdf->Line(
+            $boxX,
+            $boxY + $rowHeight,
+            $boxX + $boxWidth,
+            $boxY + $rowHeight
+        );
+
+        $pdf->Line(
+            $boxX,
+            $boxY + ($rowHeight * 2),
+            $boxX + $boxWidth,
+            $boxY + ($rowHeight * 2)
+        );
+
+        $pdf->SetLineWidth(0.2); // reset to default before further drawing
+
+
+        // =====================================================
+        // PATIENT DATA
+        // =====================================================
+
+        $pdf->SetTextColor(
+            $darkGreen[0],
+            $darkGreen[1],
+            $darkGreen[2]
+        );
+
+        $pdf->SetFont('Arial', 'B', 8);
+
+        $pdf->SetXY($boxX + 5, $boxY + 3);
+
+        $pdf->Cell(22, 6, "Name:", 0, 0);
+
+        $pdf->SetFont('Arial', '', 8);
+
+        $pdf->SetTextColor(
+            $black[0],
+            $black[1],
+            $black[2]
+        );
+
+        $pdf->Cell(
+            95,
+            6,
+            "{$patient->fname} {$patient->mname} {$patient->lname}",
+            0,
+            0
+        );
+
+
+        // DATE
+
+        $pdf->SetFont('Arial', 'B', 8);
+
+        $pdf->SetXY($dividerX + 5, $boxY + 3);
+
+        $pdf->SetTextColor(
+            $darkGreen[0],
+            $darkGreen[1],
+            $darkGreen[2]
+        );
+
+        $pdf->Cell(20, 6, "Date:", 0, 0);
+
+        $pdf->SetFont('Arial', '', 8);
+
+        $pdf->SetTextColor(
+            $black[0],
+            $black[1],
+            $black[2]
+        );
+        $date_now = date("m/d/Y");
+        $pdf->Cell(
+            30,
+            6,
+            $date_now,
+            0,
+            0
+        );
+
+
+        // AGE
+
+        $pdf->SetFont('Arial', 'B', 8);
+
+        $pdf->SetXY($boxX + 5, $boxY + $rowHeight + 3);
+
+        $pdf->SetTextColor(
+            $darkGreen[0],
+            $darkGreen[1],
+            $darkGreen[2]
+        );
+
+        $pdf->Cell(22, 6, "Age:", 0, 0);
+
+        $pdf->SetFont('Arial', '', 8);
+
+        $pdf->SetTextColor(
+            $black[0],
+            $black[1],
+            $black[2]
+        );
+
+        $pdf->Cell(
+            95,
+            6,
+            $patient_age,
+            0,
+            0
+        );
+
+
+        // SEX
+
+        $pdf->SetFont('Arial', 'B', 8);
+
+        $pdf->SetXY($dividerX + 5, $boxY + $rowHeight + 3);
+
+        $pdf->SetTextColor(
+            $darkGreen[0],
+            $darkGreen[1],
+            $darkGreen[2]
+        );
+
+        $pdf->Cell(20, 6, "Sex:", 0, 0);
+
+        $pdf->SetFont('Arial', '', 8);
+
+        $pdf->SetTextColor(
+            $black[0],
+            $black[1],
+            $black[2]
+        );
+
+        $pdf->Cell(
+            30,
+            6,
+            $patient->sex,
+            0,
+            0
+        );
+
+
+        // ADDRESS
+
+        $pdf->SetFont('Arial', 'B', 9);
+
+        $pdf->SetXY($boxX + 5, $boxY + ($rowHeight * 2) + 3);
+
+        $pdf->SetTextColor(
+            $darkGreen[0],
+            $darkGreen[1],
+            $darkGreen[2]
+        );
+
+        $pdf->Cell(22, 6, "Address:", 0, 0);
+
+        $pdf->SetFont('Arial', '', 9);
+
+        $pdf->SetTextColor(
+            $black[0],
+            $black[1],
+            $black[2]
+        );
+
+        $address = iconv(
+            'UTF-8',
+            'windows-1252//TRANSLIT',
+            $patient_form['form']->patient_address,
+        );
+
+        $pdf->Cell(
+            0,
+            6,
+            $address,
+            0,
+            0
+        );
+
+        $pdf->SetY($boxY + $boxHeight + 6);
+
+
+        // =====================================================
+        // CERTIFICATE INTRODUCTION
+        // =====================================================
+
+        $pdf->SetFont('Arial', '', 8);
+
+        $pdf->SetTextColor(20, 30, 60);
+
+        // $consultationDate = $appointment_data->appointed_date;
+
+        // Part 1: regular text
+        $pdf->SetFont('Arial', '', 8);
+        $pdf->Write(7, "This is to certify that the above-named patient was seen and examined through telemedicine consultation on ");
+
+        // Part 2: bold date
+        $pdf->SetFont('Arial', 'B', 8);
+        $pdf->Write(7, $formattedDate);
+
+        // Part 3: regular text, continued
+        $pdf->SetFont('Arial', '', 8);
+        $pdf->Write(7, ", and based on the assessment, the following is noted:");
+
+        $pdf->Ln(9);
+        $pdf->Ln(4);
+
+
+        // =====================================================
+        // MEDICAL FINDINGS / DIAGNOSIS
+        // =====================================================
+
+        $pdf->SetTextColor(
+            $darkGreen[0],
+            $darkGreen[1],
+            $darkGreen[2]
+        );
+
+        $pdf->SetFont('Arial', 'B', 10);
+
+        $sectionY = $pdf->GetY();
+
+        $pdf->SetFillColor(
+            $lightGreen[0],
+            $lightGreen[1],
+            $lightGreen[2]
+        );
+
+        $pdf->SetDrawColor(
+            $borderGreen[0],
+            $borderGreen[1],
+            $borderGreen[2]
+        );
+
+
+        // Section header
+
+        $pdf->RoundedRect(
+            $left,
+            $sectionY,
+            $contentWidth,
+            9,
+            2,
+            'DF'
+        );
+
+        $pdf->SetXY($left + 5, $sectionY + 1);
+
+        $pdf->Cell(
+            $contentWidth - 10,
+            7,
+            "MEDICAL FINDINGS / DIAGNOSIS",
+            0,
+            1,
+            'L'
+        );
+
+
+        // Diagnosis body
+
+        $pdf->SetFont('Arial', '', 8);
+
+        $pdf->SetTextColor(20, 30, 60);
+
+        $pdf->SetXY($left + 5, $sectionY + 14);
+        // dd( $diagnosis = $patient_form['form']->other_diagnoses);
+        // dd($patient_form['icd']->isEmpty(), $patient_form['form']->other_diagnoses);
+        $diagnosisParts = [];
+
+        if (!empty($patient_form['form']->other_diagnoses)) {
+            $diagnosisParts[] = $patient_form['form']->other_diagnoses;
+        }
+
+        if ($patient_form['icd']->isNotEmpty()) {
+            $diagnosisParts[] = $patient_form['icd']
+                ->map(fn($icd) => $icd->code . " - " . $icd->description)
+                ->implode("\n");
+        }
+
+        $diagnosis = implode("\n", $diagnosisParts);
+
+        $pdf->MultiCell(
+            $contentWidth - 10,
+            6,
+            $diagnosis,
+            0,
+            'L'
+        );
+        
+        
+    
+        $diagnosisBottom = $pdf->GetY() + 3;
+
+        $pdf->SetDrawColor(
+            $borderGreen[0],
+            $borderGreen[1],
+            $borderGreen[2]
+        );
+
+        $pdf->RoundedRect(
+            $left,
+            $sectionY,
+            $contentWidth,
+            $diagnosisBottom - $sectionY,
+            2,
+            'D'
+        );
+
+        $pdf->SetY($diagnosisBottom + 5);
+
+
+        // =====================================================
+        // RECOMMENDATION
+        // =====================================================
+
+        $pdf->SetFont('Arial', 'B', 10);
+
+        $recommendationY = $pdf->GetY();
+
+        $pdf->SetFillColor(
+            $lightGreen[0],
+            $lightGreen[1],
+            $lightGreen[2]
+        );
+
+        $pdf->SetDrawColor(
+            $borderGreen[0],
+            $borderGreen[1],
+            $borderGreen[2]
+        );
+
+        $pdf->RoundedRect(
+            $left,
+            $recommendationY,
+            $contentWidth,
+            9,
+            2,
+            'DF'
+        );
+
+        $pdf->SetTextColor(
+            $darkGreen[0],
+            $darkGreen[1],
+            $darkGreen[2]
+        );
+
+        $pdf->SetXY($left + 5, $recommendationY + 1);
+
+        $pdf->Cell(
+            $contentWidth - 10,
+            7,
+            "RECOMMENDATION",
+            0,
+            1,
+            'L'
+        );
+
+
+        // Recommendation body
+
+        $pdf->SetFont('Arial', '', 8);
+
+        $pdf->SetTextColor(20, 30, 60);
+
+        $pdf->SetXY($left + 5, $recommendationY + 14);
+        $recommendation = !empty($patient_form['form']->reco_summary) ? $patient_form['form']->reco_summary : "N/A";
+
+        $pdf->MultiCell(
+            $contentWidth - 10,
+            6,
+            $recommendation,
+            0,
+            'L'
+        );
+
+        $recommendationBottom = $pdf->GetY() + 3;
+
+        $pdf->SetDrawColor(
+            $borderGreen[0],
+            $borderGreen[1],
+            $borderGreen[2]
+        );
+
+        $pdf->RoundedRect(
+            $left,
+            $recommendationY,
+            $contentWidth,
+            $recommendationBottom - $recommendationY,
+            2,
+            'D'
+        );
+
+        $pdf->SetY($recommendationBottom + 5);
+
+
+        // =====================================================
+        // LEGAL PURPOSE
+        // =====================================================
+
+        $pdf->SetFont('Arial', '', 8);
+
+        $pdf->SetTextColor(20, 30, 60);
+
+        $pdf->MultiCell(
+            $contentWidth,
+            6,
+            "This certificate is issued for whatever legal purpose it may serve.",
+            0,
+            'L'
+        );
+
+        $pdf->Ln(4);
+
+
+        // =====================================================
+        // ISSUED VIA TELEMEDICINE
+        // =====================================================
+
+        $pdf->SetFont('Arial', 'B', 10);
+
+        $pdf->SetTextColor(
+            $darkGreen[0],
+            $darkGreen[1],
+            $darkGreen[2]
+        );
+
+        $pdf->Cell(
+            0,
+            6,
+            "ISSUED VIA TELEMEDICINE",
+            0,
+            1,
+            'L'
+        );
+
+        $pdf->Ln(1);
+
+        $pdf->SetFont('Arial', '', 9);
+
+        $pdf->SetTextColor(20, 30, 60);
+
+        $pdf->Cell(40, 5, "Consultation Type", 0, 0);
+
+        $pdf->Cell(8, 5, ":", 0, 0);
+
+        $pdf->Cell(0, 5, "Telemedicine", 0, 1);
+
+        $pdf->Cell(40, 5, "Platform", 0, 0);
+
+        $pdf->Cell(8, 5, ":", 0, 0);
+
+        $pdf->Cell(0, 5, "Video Call", 0, 1);
+
+        $pdf->Cell(40, 5, "Date of Consultation", 0, 0);
+
+        $pdf->Cell(8, 5, ":", 0, 0);
+
+        $pdf->Cell(0, 5, $formattedDate, 0, 1);
+
+
+        // =====================================================
+        // DOCTOR SIGNATURE
+        // =====================================================
+
+        $signatureX = $pageWidth - 80;
+
+        $signatureY = $pdf->GetY() - 12;
+
+        $pdf->SetXY($signatureX, $signatureY);
+
+        $pdf->SetFont('Arial', 'B', 10);
+
+        $pdf->SetTextColor(
+            $darkGreen[0],
+            $darkGreen[1],
+            $darkGreen[2]
+        );
+
+        $pdf->Cell(
+            65,
+            6,
+            $facility->name,
+            0,
+            1,
+            'C'
+        );
+
+        $pdf->SetFont('Arial', '', 9);
+
+        $pdf->SetTextColor(20, 30, 60);
+
+        // $pdf->Cell(
+        //     65,
+        //     5,
+        //     "LIC. NO.       PTR NO.",
+        //     0,
+        //     1,
+        //     'C'
+        // );
+
+
+        // =====================================================
+        // OUTPUT
+        // =====================================================
+
+        $pdf->Output();
+
+        exit;
+    }
+
 
      public function labRequestData() {
         $data = array(
@@ -865,9 +1690,9 @@ class PrintCtrl extends Controller
             $facility_contact = $facility->contact;
             $facility_email = $facility->email;
         }
-    
-        $signature_path = realpath(__DIR__ . '/../../../../' . $requested_by->signature);
 
+        $signature_path = realpath(__DIR__ . '/../../../../' . $requested_by->signature);
+        // dd($signature_path);
         $pdf = new PDFPrescription($header, $department, $facility->name, $facility_address, $facility_contact, $facility_email, $signature_path, $facility->license);
         $pdf->setTitle($facility->name);
         $pdf->AddPage();
