@@ -23,32 +23,48 @@ $facility_exclude =  \App\Facility::select('id')
   <ul class="nav navbar-nav">   <!-- id="navbar-main" -->
         @if(!$multi_faci && ($user->level=='doctor' || $user->level=='midwife' || $user->level=='medical_dispatcher' || $user->level=='nurse' || $user->level=='mayor' || $user->level=='dmo'))
             <li class="dropdown">
-                <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-home"></i> Dashboard</a>
+                <!-- <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-home"></i> Dashboard</a> -->
+                  <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> Dashboard</a>
                 <ul class="dropdown-menu">
-                    <li><a href="{{ url('doctor') }}"><i class="fa fa-line-chart"></i> Dashboard</a></li>
-                    <li><a href="{{ url('dashboard') }}"><i class="fa fa-line-chart"></i> Bed Tracker Dashboard</a></li>
+                    <!-- <li><a href="{{ url('doctor') }}"><i class="fa fa-line-chart"></i> Dashboard</a></li>
+                    <li><a href="{{ url('dashboard') }}"><i class="fa fa-line-chart"></i> Bed Tracker Dashboard</a></li> -->
+                    <li><a href="{{ url('doctor') }}">Dashboard</a></li>
+                    <li><a href="{{ url('dashboard') }}"> Bed Tracker Dashboard</a></li>
                 </ul>
             </li>
             @if($user->level != 'mayor' && $user->level != 'dmo')
             <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-users"></i> Patients <span class="caret"></span></a>
+                <!-- <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-users"></i> Patients <span class="caret"></span></a> -->
+                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Patients <span class="caret"></span></a>
                 <ul class="dropdown-menu">
-                    <li><a href="{{ url('doctor/patient') }}"><i class="fa fa-table"></i> List of Patients</a></li>
+                    <!-- <li><a href="{{ url('doctor/patient') }}"><i class="fa fa-table"></i> List of Patients</a></li> -->
+                     <li><a href="{{ url('doctor/patient') }}">List of Patients</a></li>
                     @if($user->facility_id == 101)
-                        <li><a href="{{ url('opcen/ckd') }}"><i class="fa fa-table"></i> CKD</a></li>
+                        <!-- <li><a href="{{ url('opcen/ckd') }}"><i class="fa fa-table"></i> CKD</a></li> -->
+                         <li><a href="{{ url('opcen/ckd') }}"> CKD</a></li>
                     @endif
                     {{-- <li><a href="{{ url('doctor/appointment/calendar') }}"><i class="fa fa-table"></i> Appointment Calendar</a></li> --}}
                     <!-- @if($user->level == 'support')
                         <li><a href="{{ url('configSchedule')}}"><i class="fa fa-table"></i> Config Schedule</a></li>
                     @endif -->
                     <li class="divider"></li>
-                    <li><a href="{{ url('doctor/accepted') }}"><i class="fa fa-user-plus"></i> Accepted Patients</a></li>
+                    <!-- <li><a href="{{ url('doctor/accepted') }}"><i class="fa fa-user-plus"></i> Accepted Patients</a></li>
                     <li><a href="{{ url('doctor/discharge') }}"><i class="fa fa-users"></i> Discharged Patients</a></li>
                     <li><a href="{{ url('doctor/transferred') }}"><i class="fa fa-ambulance"></i> Transferred Patients</a></li>
                     <li><a href="{{ url('doctor/cancelled') }}"><i class="fa fa-user-times"></i> Cancelled Patients</a></li>
                     <li><a href="{{ url('doctor/archived') }}"><i class="fa fa-archive"></i> Archived Patients</a></li>
                     <li><a href="{{ url('doctor/redirected') }}"><i class="fa fa-external-link"></i> Redirected Patients</a></li>
                     <li><a href="{{ url('doctor/redirect/reco') }}"><i class="fa fa-external-link-square"></i> Recommended to be Redirected</a></li>
+                    <li class="divider"></li>
+                    <li><a href="{{ url('doctor/referred/track') }}"><i class="fa fa-line-chart"></i> Track Patient</a></li>
+                    <li class="hide"><a href="{{ url('maintenance') }}"><i class="fa fa-line-chart"></i> Rerouted Patients</a></li> -->
+                    <li><a href="{{ url('doctor/accepted') }}"> Accepted Patients</a></li>
+                    <li><a href="{{ url('doctor/discharge') }}"> Discharged Patients</a></li>
+                    <li><a href="{{ url('doctor/transferred') }}"> Transferred Patients</a></li>
+                    <li><a href="{{ url('doctor/cancelled') }}"> Cancelled Patients</a></li>
+                    <li><a href="{{ url('doctor/archived') }}"> Archived Patients</a></li>
+                    <li><a href="{{ url('doctor/redirected') }}"> Redirected Patients</a></li>
+                    <li><a href="{{ url('doctor/redirect/reco') }}"> Recommended to be Redirected</a></li>
                     <li class="divider"></li>
                     <li><a href="{{ url('doctor/referred/track') }}"><i class="fa fa-line-chart"></i> Track Patient</a></li>
                     <li class="hide"><a href="{{ url('maintenance') }}"><i class="fa fa-line-chart"></i> Rerouted Patients</a></li>
@@ -61,12 +77,16 @@ $facility_exclude =  \App\Facility::select('id')
                 
             @if($user->level != 'mayor' && $user->level != 'dmo')
             <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-wheelchair"></i> Referral <span class="badge" style="font-size: 8pt;"><span class="count_referral">{{ $count }}</span> New</span><span class="caret"></span></a>
+                <!-- <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-wheelchair"></i> Referral <span class="badge bg-green" style="font-size: 8pt;"><span class="count_referral">{{ $count }}</span></span><span class="caret"></span></a> -->
+                   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> Referral <span class="badge bg-green" style="font-size: 8pt;"><span class="count_referral">{{ $count }}</span></span><span class="caret"></span></a>
                 <ul class="dropdown-menu">
-                    <li><a href="{{ url('doctor/referral') }}?filterRef=0"><i class="fa fa-ambulance"></i> Incoming &nbsp;&nbsp; <span class="badge"><span class="count_referral">{{ $count }}</span> New</span></a></li>
-                    <li><a href="{{ url('doctor/referred') }}?filterRef=0"><i class="fa fa-user"></i>&nbsp; Referred Patients</a></li>
+                    <!-- <li><a href="{{ url('doctor/referral') }}?filterRef=0"><i class="fa fa-ambulance"></i> Incoming &nbsp;&nbsp; <span class="badge bg-green"><span class="count_referral">{{ $count }}</span></span></a></li>
+                    <li><a href="{{ url('doctor/referred') }}?filterRef=0"><i class="fa fa-user"></i>&nbsp; Referred Patients</a></li> -->
+                    <li><a href="{{ url('doctor/referral') }}?filterRef=0"> Incoming &nbsp;&nbsp; <span class="badge bg-green"><span class="count_referral">{{ $count }}</span></span></a></li>
+                    <li><a href="{{ url('doctor/referred') }}?filterRef=0">&nbsp; Referred Patients</a></li>
                     <li class="divider"></li>
-                    <li><a href="{{ url('doctor/duplicate') }}"><i class="fa fa-files-o"></i> Duplicate Referrals</a></li>
+                    <!-- <li><a href="{{ url('doctor/duplicate') }}"><i class="fa fa-files-o"></i> Duplicate Referrals</a></li> -->
+                      <li><a href="{{ url('doctor/duplicate') }}"> Duplicate Referrals</a></li>
                     <!--
                     <li><a href="{{ url('maintenance') }}"><i class="fa fa-hospital-o"></i> Emergency Walk-In</a></li>
                     <li><a href="{{ url('doctor/report/incoming') }}"><i class="fa fa-sign-in"></i> Incoming Referral Report</a></li>
@@ -78,23 +98,27 @@ $facility_exclude =  \App\Facility::select('id')
             <!-- Telemed Dropdown -->
             <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                    <i class="fa fa-video-camera"></i> Telemed <span class="badge" style="font-size: 8pt;"><span class="count_referral">{{ $countTelemed }}</span> New</span><span class="caret"></span>
+                    <!-- <i class="fa fa-video-camera"></i> Telemed <span class="badge bg-green" style="font-size: 8pt;"><span class="count_referral">{{ $countTelemed }}</span></span><span class="caret"></span> -->
+                     Telemed <span class="badge bg-green" style="font-size: 8pt;"><span class="count_referral">{{ $countTelemed }}</span></span><span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu">
                     @if(!in_array($user->facility_id, $facility_exclude))
-                        <li><a href="{{ url('doctor/appointment/calendar') }}"><i class="fa fa-table"></i> Book Appointment</a></li>
+                        <!-- <li><a href="{{ url('doctor/appointment/calendar') }}"><i class="fa fa-table"></i> Book Appointment</a></li> -->
+                         <li><a href="{{ url('doctor/appointment/calendar') }}">Book Appointment</a></li>
                     @endif
                     <li>
                         <a href="{{ url('doctor/referral') }}?filterRef=1"  id="incoming-link">
-                            <i class="fa fa-ambulance incoming_nav"></i> Incoming &nbsp;&nbsp; 
-                            {{-- <span class="badge">
+                            <!-- <i class="fa fa-ambulance incoming_nav"></i>  -->
+                            Incoming &nbsp;&nbsp; 
+                            {{-- <span class="badge bg-green">
                                 <span class="count_referral_telemed">{{ $countTelemed }}</span> New
                             </span> --}}
                         </a>
                     </li>
                     <li>    
                         <a href="{{ url('doctor/referred') }}?filterRef=1">
-                            <i class="fa fa-ambulance outgoing_nav"></i> Outgoing &nbsp;&nbsp; 
+                            <!-- <i class="fa fa-ambulance outgoing_nav"></i>  -->
+                            Outgoing &nbsp;&nbsp; 
                             <!-- <span class="badge">
                                 <span class="count_referral_telemed">{{ $countTelemed }}</span> New
                             </span> -->
@@ -102,20 +126,26 @@ $facility_exclude =  \App\Facility::select('id')
                     </li>
                     <li class="divider"></li>
                     @if(!in_array($user->facility_id, $facility_exclude))
-                        <li class="dropdown-submenu">
-                            <a href="#"><i class="fa fa-table"></i> Manage Appointment</a>
+                        <li class="dropdown-submenu" style="text-align: center;">
+                            <!-- <a href="#"><i class="fa fa-table"></i>  -->
+                            Manage Appointment</a>
                             <ul class="dropdown-menu">
-                                <li><a href="{{ url('manage/appointment?type=upcoming') }}" data-toggle="modal"><i class="fa fa-calendar-check-o"></i>Upcoming Appointment</a></li>
+                                <!-- <li><a href="{{ url('manage/appointment?type=upcoming') }}" data-toggle="modal"><i class="fa fa-calendar-check-o"></i>Upcoming Appointment</a></li>
                                 <li><a href="{{ url('manage/appointment?type=past') }}" data-toggle="modal"><i class="fa fa-history"></i>Past Appointment</a></li>
-                                <li><a href="{{ url('configSchedule')}}" id="configSched_Id"><i class="fa fa-table"></i> Config Schedule</a></li>
+                                <li><a href="{{ url('configSchedule')}}" id="configSched_Id"><i class="fa fa-table"></i> Config Schedule</a></li> -->
+                                <li><a href="{{ url('manage/appointment?type=upcoming') }}" data-toggle="modal">Upcoming Appointment</a></li>
+                                <li><a href="{{ url('manage/appointment?type=past') }}" data-toggle="modal">Past Appointment</a></li>
+                                <li><a href="{{ url('configSchedule')}}" id="configSched_Id">Config Schedule</a></li>
                             </ul>
                         </li>
                     @endif
                     <li class="dropdown-submenu">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-print"></i> Reports </a>
+                    <!-- <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-print"></i> Reports </a> -->
+                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> Reports </a>
                     <ul class="dropdown-menu">
                         <!-- <li><a href="{{ url('admin/report/top/icd?telemedicine=1') }}" data-toggle="modal"><i class="fa fa-odnoklassniki-square"></i>Top ICD-10 Diagnosis</a></li> -->
-                        <li><a href="{{ url('count/Consultation') }}" data-toggle="modal"><i class="fa fa-pie-chart"></i>Consolidated Report</a></li>
+                        <!-- <li><a href="{{ url('count/Consultation') }}" data-toggle="modal"><i class="fa fa-pie-chart"></i>Consolidated Report</a></li> -->
+                          <li><a href="{{ url('count/Consultation') }}" data-toggle="modal">Consolidated Report</a></li>
                         <!-- <li><a href="#" data-toggle="modal"> Report 2</a></li>
                         <li><a href="#" data-toggle="modal"> Report 3</a></li> -->
                     </ul>
@@ -127,7 +157,8 @@ $facility_exclude =  \App\Facility::select('id')
             @endif
             @include('layouts.report_menu')
         @elseif($user->level=='support')
-            <li><a href="{{ url('support/') }}"><i class="fa fa-home"></i> Dashboard</a></li>
+            <!-- <li><a href="{{ url('support/') }}"><i class="fa fa-home"></i> Dashboard</a></li> -->
+              <li><a href="{{ url('support/') }}"> Dashboard</a></li>
             @include('layouts.report_menu')
             <!-- <li><a href="{{ url('configSchedule')}}"><i class="fa fa-table"></i> Config Schedule</a></li> -->
             <!-- <li class="dropdown">
@@ -137,8 +168,10 @@ $facility_exclude =  \App\Facility::select('id')
                     <li><a href="{{ url('manage/appointment') }}"><i class="fa fa-table"></i> Manual Appointment</a></li>
                 </ul>
             </li> -->
-            <li><a href="{{ url('support/users') }}"><i class="fa fa-user-md"></i> Manage Users</a></li>
-            <li><a href="{{ url('support/hospital') }}"><i class="fa fa-hospital-o"></i> Hospital Info</a></li>
+            <!-- <li><a href="{{ url('support/users') }}"><i class="fa fa-user-md"></i> Manage Users</a></li>
+            <li><a href="{{ url('support/hospital') }}"><i class="fa fa-hospital-o"></i> Hospital Info</a></li> -->
+            <li><a href="{{ url('support/users') }}"> Manage Users</a></li>
+            <li><a href="{{ url('support/hospital') }}"> Hospital Info</a></li>
                    
         <!--
                 <li><a href="{{ url('inventory').'/'.$user->facility_id }}"><i class="fa fa-calculator"></i> Inventory <span class="badge bg-red"> New</span></a></li>
@@ -172,7 +205,8 @@ $facility_exclude =  \App\Facility::select('id')
                 </li>
                 -->
         @elseif($user->level=='mcc')
-            <li><a href="{{ url('mcc/') }}"><i class="fa fa-home"></i> Dashboard</a></li>
+            <!-- <li><a href="{{ url('mcc/') }}"><i class="fa fa-home"></i> Dashboard</a></li> -->
+             <li><a href="{{ url('mcc/') }}"> Dashboard</a></li>
                 <!--
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-print"></i> Report <span class="caret"></span></a>
@@ -184,76 +218,111 @@ $facility_exclude =  \App\Facility::select('id')
                     </ul>
                 </li>
                 -->
-            <li><a href="{{ url('mcc/track') }}"><i class="fa fa-line-chart"></i> Track</a></li>
+            <!-- <li><a href="{{ url('mcc/track') }}"><i class="fa fa-line-chart"></i> Track</a></li> -->
+            <li><a href="{{ url('mcc/track') }}"> Track</a></li>
             @include('layouts.report_menu')
         @elseif($user->level=='admin')
-            <li><a href="{{ url('admin/') }}"><i class="fa fa-home"></i> Dashboard</a></li>
+            <!-- <li><a href="{{ url('admin/') }}"><i class="fa fa-home"></i> Dashboard</a></li> -->
+             <li><a href="{{ url('admin/') }}"> Dashboard</a></li>
             <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ambulance"></i> E-Referral<span class="caret"></span></a>
+                <!-- <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ambulance"></i> E-Referral<span class="caret"></span></a> -->
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">E-Referral<span class="caret"></span></a>
                 <ul class="dropdown-menu">
-                    <li><a href="{{ url('doctor/patient') }}"><i class="fa fa-table"></i> List of Patients</a></li>
+                    <!-- <li><a href="{{ url('doctor/patient') }}"><i class="fa fa-table"></i> List of Patients</a></li>
                     <li><a href="{{ url('doctor/referred') }}"><i class="fa fa-ambulance"></i> Referred Patients</a></li>
                     <li><a href="{{ url('doctor/referred/track') }}"><i class="fa fa-line-chart"></i> Track Patient</a></li>
                     <li class="divider"></li>
-                    <li><a href="{{ url('doctor/duplicate') }}"><i class="fa fa-files-o"></i> Duplicate Referrals</a></li>
+                    <li><a href="{{ url('doctor/duplicate') }}"><i class="fa fa-files-o"></i> Duplicate Referrals</a></li> -->
+                    <li><a href="{{ url('doctor/patient') }}"> List of Patients</a></li>
+                    <li><a href="{{ url('doctor/referred') }}"> Referred Patients</a></li>
+                    <li><a href="{{ url('doctor/referred/track') }}"> Track Patient</a></li>
+                    <li class="divider"></li>
+                    <li><a href="{{ url('doctor/duplicate') }}">Duplicate Referrals</a></li>
                 </ul>
             </li>
             <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-phone"></i> Call <span class="caret"></span></a>
+                <!-- <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-phone"></i> Call <span class="caret"></span></a> -->
+                   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> Call <span class="caret"></span></a>
                 <ul class="dropdown-menu">
-                    <li><a href="{{ url('opcen/client') }}"><i class="fa fa-phone"></i> Call Center</a></li>
-                    <li><a href="{{ url('it/client') }}"><i class="fa fa-phone"></i> IT</a></li>
+                    <!-- <li><a href="{{ url('opcen/client') }}"><i class="fa fa-phone"></i> Call Center</a></li>
+                    <li><a href="{{ url('it/client') }}"><i class="fa fa-phone"></i> IT</a></li> -->
+                    <li><a href="{{ url('opcen/client') }}"> Call Center</a></li>
+                    <li><a href="{{ url('it/client') }}"> IT</a></li>
                 </ul>
             </li>
             <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-wrench"></i> Manage <span class="caret"></span></a>
+                <!-- <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-wrench"></i> Manage <span class="caret"></span></a> -->
+                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> Manage <span class="caret"></span></a>
                 <ul class="dropdown-menu">
-                    <li><a href="{{ url('admin/users') }}" ><i class="fa fa-users"></i> IT Support/ Call Center/ Bed</a></li>
+                    <!-- <li><a href="{{ url('admin/users') }}" ><i class="fa fa-users"></i> IT Support/ Call Center/ Bed</a></li> -->
+                     <li><a href="{{ url('admin/users') }}" > IT Support/ Call Center/ Bed</a></li>
                     {{--<li><a href="{{ url('admin/doctor/assignment') }}" ><i class="fa fa-user-md"></i>&nbsp; Doctor's Facility Assignment</a></li>--}}
-                    <li><a href="{{ url('admin/facility') }}" ><i class="fa fa-hospital-o"></i>&nbsp; Facilities</a></li>
-                    <li><a href="{{ url('admin/province') }}" ><i class="fa fa-hospital-o"></i>&nbsp; Province</a></li>
+                    <!-- <li><a href="{{ url('admin/facility') }}" ><i class="fa fa-hospital-o"></i>&nbsp; Facilities</a></li>
+                    <li><a href="{{ url('admin/province') }}" ><i class="fa fa-hospital-o"></i>&nbsp; Province</a></li> -->
+                    <li><a href="{{ url('admin/facility') }}" >&nbsp; Facilities</a></li>
+                    <li><a href="{{ url('admin/province') }}" >&nbsp; Province</a></li>
                     <li class="dropdown-submenu">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> <span class="nav-label"><i class="fa fa-hospital-o"></i>&nbsp;&nbsp;&nbsp; Municipality</span></a>
+                        <!-- <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> <span class="nav-label"><i class="fa fa-hospital-o"></i>&nbsp;&nbsp;&nbsp; Municipality</span></a> -->
+                          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> <span class="nav-label">&nbsp;&nbsp;&nbsp; Municipality</span></a>
                         <ul class="dropdown-menu">
                             @foreach(\App\Province::get() as $prov)
                                 <li><a href="{{ asset('admin/municipality').'/'.$prov->id }}">{{ $prov->description }}</a></li>
                             @endforeach
                         </ul>
                     </li>
-                    <li><a href="{{ url('admin/reason-referral') }}"><i class="fa fa-wrench"></i> Reason for Referral</a></li>
+                    <!-- <li><a href="{{ url('admin/reason-referral') }}"><i class="fa fa-wrench"></i> Reason for Referral</a></li>
                     <li><a href="{{ url('admin/icd') }}"><i class="fa fa-file-text-o"></i> ICD-10</a></li>
                     <li><a href="{{ url('admin/appointment') }}"><i class="fa fa-pencil-square-o"></i> Appointments </a></li>
-                    <li><a href="{{ url('admin/user_feedback') }}"><i class="fa fa-comments-o"></i> User Feedbacks </a></li>
+                    <li><a href="{{ url('admin/user_feedback') }}"><i class="fa fa-comments-o"></i> User Feedbacks </a></li> -->
+                    <li><a href="{{ url('admin/reason-referral') }}"> Reason for Referral</a></li>
+                    <li><a href="{{ url('admin/icd') }}"> ICD-10</a></li>
+                    <li><a href="{{ url('admin/appointment') }}"> Appointments </a></li>
+                    <li><a href="{{ url('admin/user_feedback') }}"> User Feedbacks </a></li>
                 <!-- <li><a href="{{ url('excel/import') }}"><i class="fa fa-file-excel-o"></i> Import</a></li> -->
                 </ul>
             </li>
             @include('layouts.report_menu')
         @elseif($user->level=='eoc_region')
-            <li><a href="{{ url('eoc_region/') }}"><i class="fa fa-home"></i> Dashboard</a></li>
-            <li><a href="{{ url('eoc_city/graph') }}"><i class="fa fa-line-chart"></i> Graph</a></li>
+            <!-- <li><a href="{{ url('eoc_region/') }}"><i class="fa fa-home"></i> Dashboard</a></li>
+            <li><a href="{{ url('eoc_city/graph') }}"><i class="fa fa-line-chart"></i> Graph</a></li> -->
+            <li><a href="{{ url('eoc_region/') }}"> Dashboard</a></li>
+            <li><a href="{{ url('eoc_city/graph') }}"> Graph</a></li>
         @elseif($user->level=='eoc_city')
-            <li><a href="{{ url('eoc_city/') }}"><i class="fa fa-home"></i> Dashboard</a></li>
-            <li><a href="{{ url('eoc_city/graph') }}"><i class="fa fa-line-chart"></i> Graph</a></li>
+            <!-- <li><a href="{{ url('eoc_city/') }}"><i class="fa fa-home"></i> Dashboard</a></li>
+            <li><a href="{{ url('eoc_city/graph') }}"><i class="fa fa-line-chart"></i> Graph</a></li> -->
+             <li><a href="{{ url('eoc_city/') }}"> Dashboard</a></li>
+            <li><a href="{{ url('eoc_city/graph') }}"> Graph</a></li>
         @elseif($user->level=='opcen')
-            <li><a href="{{ url('opcen') }}"><i class="fa fa-home"></i> Dashboard</a></li>
+            <!-- <li><a href="{{ url('opcen') }}"><i class="fa fa-home"></i> Dashboard</a></li>
             <li><a href="{{ url('opcen/client') }}"><i class="fa fa-phone"></i> Call</a></li>
-            <li><a href="{{ asset('public/directory/Call-Center-Directory.xlsx') }}"><i class="fa fa-print"></i> Directory</a></li>
+            <li><a href="{{ asset('public/directory/Call-Center-Directory.xlsx') }}"><i class="fa fa-print"></i> Directory</a></li> -->
+            <li><a href="{{ url('opcen') }}">Dashboard</a></li>
+            <li><a href="{{ url('opcen/client') }}"> Call</a></li>
+            <li><a href="{{ asset('public/directory/Call-Center-Directory.xlsx') }}"> Directory</a></li>
             <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ambulance"></i> E-Referral <span class="caret"></span></a>
+                <!-- <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ambulance"></i> E-Referral <span class="caret"></span></a> -->
+                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> E-Referral <span class="caret"></span></a>
                 <ul class="dropdown-menu">
-                    <li><a href="{{ url('doctor/patient') }}"><i class="fa fa-table"></i> List of Patients</a></li>
+                    <!-- <li><a href="{{ url('doctor/patient') }}"><i class="fa fa-table"></i> List of Patients</a></li>
                     <li><a href="{{ url('doctor/referred') }}"><i class="fa fa-ambulance"></i> Referred Patients</a></li>
                     <li><a href="{{ url('doctor/referred/track') }}"><i class="fa fa-line-chart"></i> Track Patient</a></li>
-                    <li><a href="{{ url('opcen/ckd') }}"><i class="fa fa-table"></i> CKD</a></li>
+                    <li><a href="{{ url('opcen/ckd') }}"><i class="fa fa-table"></i> CKD</a></li> -->
+                    <li><a href="{{ url('doctor/patient') }}"> List of Patients</a></li>
+                    <li><a href="{{ url('doctor/referred') }}"> Referred Patients</a></li>
+                    <li><a href="{{ url('doctor/referred/track') }}"> Track Patient</a></li>
+                    <li><a href="{{ url('opcen/ckd') }}"> CKD</a></li>
                     <!-- <li><a href="{{ url('revised/referral') }}"><i class="fa fa-file-text"></i> E-Referral Form <small class="badge bg-red"> New</small></a></li> -->
                 </ul>
             </li>
             @include('layouts.report_menu')
         @elseif($user->level == 'bed_tracker')
-            <li><a href="{{ url('bed_tracker') }}"><i class="fa fa-home"></i> Dashboard</a></li>
-            <li><a href="{{ url('bed').'/'.$user->facility_id }}"><i class="fa fa-bed"></i> Update Bed Availability <small class="badge bg-red"> New</small></a></li>
+            <!-- <li><a href="{{ url('bed_tracker') }}"><i class="fa fa-home"></i> Dashboard</a></li>
+            <li><a href="{{ url('bed').'/'.$user->facility_id }}"><i class="fa fa-bed"></i> Update Bed Availability <small class="badge bg-red"> New</small></a></li> -->
+            <li><a href="{{ url('bed_tracker') }}"> Dashboard</a></li>
+            <li><a href="{{ url('bed').'/'.$user->facility_id }}"> Update Bed Availability <small class="badge bg-red"> New</small></a></li>
         @elseif($user->level=='vaccine')
-            <li><a href="{{ url('vaccine') }}"><i class="fa fa-home"></i> Dashboard</a></li>
+            <!-- <li><a href="{{ url('vaccine') }}"><i class="fa fa-home"></i> Dashboard</a></li> -->
+             <li><a href="{{ url('vaccine') }}"> Dashboard</a></li>
             @foreach(\App\Province::get() as $prov)
                 <li><a href="{{ asset('vaccine/vaccineview').'/'.$prov->id }}">{{ $prov->description }}</a></li>
             @endforeach
@@ -261,11 +330,30 @@ $facility_exclude =  \App\Facility::select('id')
             <li><a href="{{ asset('vaccine/facility').'/mandaue' }}">Mandaue City</a></li>
             <li><a href="{{ asset('vaccine/facility').'/lapu' }}">Lapu-Lapu City</a></li>
         @elseif($user->level=="capitol")
-            <li><a href="{{ url('opcen') }}"><i class="fa fa-home"></i> Dashboard</a></li>
+            <!-- <li><a href="{{ url('opcen') }}"><i class="fa fa-home"></i> Dashboard</a></li> -->
+             <li><a href="{{ url('opcen') }}"> Dashboard</a></li>
             @include('layouts.report_menu')                       
         @endif
+        <li class="dropdown" id="websocket-notification-menu">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" onclick="fetchWebsocketNotifications()" aria-haspopup="true" aria-expanded="false">
+                <!-- <i class="fa fa-bell-o"></i>  -->
+                Alerts
+                <span class="badge bg-green websocket-notification-count" id="websocket-notification-count" style="display:none;">0</span>
+            </a>
+            <ul class="dropdown-menu referral-menu">
+                <li class="referral-header">
+                    <span>
+                        <!-- <i class="fa fa-bell-o"></i>  -->
+                    Notifications</span>
+                    <button type="button" class="btn btn-link btn-xs" onclick="markAllWebsocketNotificationsRead(event)">Mark all read</button>
+                </li>
+                <li><div class="referral-scroll" id="websocket-notifications-list"></div></li>
+                <li class="referral-footer"><a href="{{ url('websocket-notifications') }}">View notification history</a></li>
+            </ul>
+        </li>
         @if($user->level == 'admin' || $user->level == 'capitol')
-            <li><a href="{{ url('admin/login') }}"><i class="fa fa-sign-in"></i> Login As</a></li>
+            <!-- <li><a href="{{ url('admin/login') }}"><i class="fa fa-sign-in"></i> Login As</a></li> -->
+             <li><a href="{{ url('admin/login') }}"> Login As</a></li>
         @endif
         @if(!$multi_faci && $user->level != 'vaccine' && $user->level != 'Patient')
             {{--<li><a href="{{ asset('public/manual/Ereferral-User-Manual.pdf') }}" target="_blank"><i class="fa fa-file-pdf-o"></i> E-REFERRAL Manual </a></li>--}}
@@ -278,14 +366,15 @@ $facility_exclude =  \App\Facility::select('id')
                 </ul>
             </li> -->
             <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" onclick='fetchRecoNotifications()'>
+                <!-- <a href="#" class="dropdown-toggle" data-toggle="dropdown" onclick='fetchRecoNotifications()'>
                     <i class="fa fa-bell"></i> Reco
                     <span class="badge badge-danger" id="reco_count">{{ $reco_count }}</span>
-                </a>
+                </a> -->
                 <ul class="dropdown-menu referral-menu shadow-lg">
                     <!-- HEADER -->
                     <li class="referral-header">
-                        <i class="fa fa-info-circle"></i> Reco Messages
+                        <!-- <i class="fa fa-info-circle"></i>  -->
+                        Reco Messages
                     </li>
                     <!-- SCROLLABLE BODY -->
                     <li>
@@ -299,10 +388,13 @@ $facility_exclude =  \App\Facility::select('id')
             </li>
 
             @if($user->level == 'admin')
-                <li><a href="{{ url('patient/walkin') }}"><i class="fa fa-odnoklassniki"></i> Walk-in Patients Monitoring </a></li>
+                <!-- <li><a href="{{ url('patient/walkin') }}"><i class="fa fa-odnoklassniki"></i> Walk-in Patients Monitoring </a></li> -->
+                 <li><a href="{{ url('patient/walkin') }}"> Walk-in Patients Monitoring </a></li>
             @endif
-            <li><a href="{{ url('monitoring') }}"><i class="fa fa-clock-o"></i> NA within 30 minutes </a></li>
-            <li><a href="{{ url('issue/concern') }}"><i class="fa fa fa-exclamation-triangle"></i> IAC </a></li>
+            <!-- <li><a href="{{ url('monitoring') }}"><i class="fa fa-clock-o"></i> NA within 30 minutes </a></li>
+            <li><a href="{{ url('issue/concern') }}"><i class="fa fa fa-exclamation-triangle"></i> IAC </a></li> -->
+            <li><a href="{{ url('monitoring') }}"> NA within 30 minutes </a></li>
+            <li><a href="{{ url('issue/concern') }}"> IAC </a></li>
             {{--<li><a href="{{ url('chat') }}"><i class="fa fa-wechat"></i> Chat <span class="badge bg-green"><span>{{ $count_chat }}</span> New</span></a></li>--}}
         <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
@@ -317,15 +409,18 @@ $facility_exclude =  \App\Facility::select('id')
                         <li><a href="{{ url('reco') }}"><i class="fa fa-wechat"></i> ReCo <span class="badge bg-green"><span id="reco_count">{{ $reco_count }}</span> New</span></a></li>
                     </ul>
                 </li> -->
-                <li><a href="{{ url('bed_admin') }}"><i class="fa fa-bed"></i> BAS</a></li>
+                <!-- <li><a href="{{ url('bed_admin') }}"><i class="fa fa-bed"></i> BAS</a></li> -->
+                 <li><a href="{{ url('bed_admin') }}"> BAS</a></li>
                 <li class="dropdown-submenu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        <i class="fa fa-user-md"></i> Who's Online
+                        <!-- <i class="fa fa-user-md"></i> Who's Online -->
+                         Who's Online
                     </a>
                 @endif
                 @if(!$multi_faci)
                     <ul class="dropdown-menu">
-                        <li><a href="{{ url('doctor/list') }}"><i class="fa fa-user-md"></i> Who's Online</a></li>
+                        <!-- <li><a href="{{ url('doctor/list') }}"><i class="fa fa-user-md"></i> Who's Online</a></li> -->
+                          <li><a href="{{ url('doctor/list') }}"> Who's Online</a></li>
                     </ul>
                 </li>
                 @endif
@@ -334,15 +429,19 @@ $facility_exclude =  \App\Facility::select('id')
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-gear"></i> Settings </a>
                     <ul class="dropdown-menu">
                         @if($user->level == 'opcen')
-                            <li><a href="{{ url('admin/login') }}"><i class="fa fa-sign-in"></i> Login As </a></li>
+                            <!-- <li><a href="{{ url('admin/login') }}"><i class="fa fa-sign-in"></i> Login As </a></li> -->
+                             <li><a href="{{ url('admin/login') }}"> Login As </a></li>
                         @endif
-                        <li><a href="#setLogoutTime" data-toggle="modal" onclick="openLogoutTime();"><i class="fa fa-clock-o"></i> Set Time to Logout</a></li>
+                        <!-- <li><a href="#setLogoutTime" data-toggle="modal" onclick="openLogoutTime();"><i class="fa fa-clock-o"></i> Set Time to Logout</a></li>
                         <li><a href="#editProfileModal" data-toggle="modal"><i class="fa fa-pencil"></i> Edit Profile</a></li>
-                        <li><a href="#resetPasswordModal" data-toggle="modal"><i class="fa fa-key"></i> Change Password</a></li>
+                        <li><a href="#resetPasswordModal" data-toggle="modal"><i class="fa fa-key"></i> Change Password</a></li> -->
+                        <li><a href="#setLogoutTime" data-toggle="modal" onclick="openLogoutTime();">Set Time to Logout</a></li>
+                        <li><a href="#editProfileModal" data-toggle="modal">Edit Profile</a></li>
+                        <li><a href="#resetPasswordModal" data-toggle="modal"> Change Password</a></li>
                         @if($user->level=='doctor' || $user->level=='midwife')
-                            <li><a href="#dutyModal" data-toggle="modal"><i class="fa fa-user-md"></i> Change Login Status</a></li>
+                            <li><a href="#dutyModal" data-toggle="modal"> Change Login Status</a></li>
                             <li class="divider"></li>
-                            <li><a href="#loginModal" data-toggle="modal"><i class="fa fa-users"></i> Switch User</a></li>
+                            <li><a href="#loginModal" data-toggle="modal"> Switch User</a></li>
                         @else
                             <li class="divider"></li>
                         @endif
@@ -351,22 +450,27 @@ $facility_exclude =  \App\Facility::select('id')
                             <?php
                             $check_login_as = \App\User::find($user->id);     
                             ?>
-                            <li><a href="{{ url('admin/account/return') }}"><i class="fa fa-user-secret"></i> <?php echo $check_login_as->level == 'admin' ? 'Back as Admin' : ($check_login_as->level == 'opcen' ? 'Back as Agent' : ($check_login_as->level == 'capitol' ? 'Back as Capitol': 'Back')); ?></a></li>
+                            <!-- <li><a href="{{ url('admin/account/return') }}"><i class="fa fa-user-secret"></i> <?php echo $check_login_as->level == 'admin' ? 'Back as Admin' : ($check_login_as->level == 'opcen' ? 'Back as Agent' : ($check_login_as->level == 'capitol' ? 'Back as Capitol': 'Back')); ?></a></li> -->
+                            <li><a href="{{ url('admin/account/return') }}"><?php echo $check_login_as->level == 'admin' ? 'Back as Admin' : ($check_login_as->level == 'opcen' ? 'Back as Agent' : ($check_login_as->level == 'capitol' ? 'Back as Capitol': 'Back')); ?></a></li>
                         @endif
                     </ul>
                 </li>
                 @endif
                 @if($user->level == 'Patient')
-                    <li><a href="{{ url('doctor/appointment/calendar') }}"><i class="fa fa-table"></i> Book Appointment</a></li>
+                    <!-- <li><a href="{{ url('doctor/appointment/calendar') }}"><i class="fa fa-table"></i> Book Appointment</a></li> -->
+                     <li><a href="{{ url('doctor/appointment/calendar') }}"></i> Book Appointment</a></li>
                     <li>    
                          <a href="{{ url('doctor/referred') }}?filterRef=1">
-                            <i class="fa fa-ambulance outgoing_nav"></i> Outgoing &nbsp;&nbsp; 
+                            <!-- <i class="fa fa-ambulance outgoing_nav"></i> Outgoing &nbsp;&nbsp;  -->
+                             Outgoing &nbsp;&nbsp; 
                         </a>
                      </li>
-                    <li><a href="#editProfileModal" data-toggle="modal"><i class="fa fa-pencil"></i> Edit Profile</a></li>
+                    <!-- <li><a href="#editProfileModal" data-toggle="modal"><i class="fa fa-pencil"></i> Edit Profile</a></li> -->
+                    <li><a href="#editProfileModal" data-toggle="modal"> Edit Profile</a></li>
                 @endif
                 <li>
-                    <a href="{{ url('logout') }}"><i class="fa fa-sign-out"></i> Logout</a>
+                    <!-- <a href="{{ url('logout') }}"><i class="fa fa-sign-out"></i> Logout</a> -->
+                      <a href="{{ url('logout') }}"> Logout</a>
                 </li>
             </ul>
         </li>
@@ -573,6 +677,106 @@ $facility_exclude =  \App\Facility::select('id')
         sessionStorage.setItem('reco_payload', JSON.stringify(payload));
         window.location.href = recoBaseUrl;
     }
+
+    const websocketNotificationUrl = "{{ url('websocket-notifications') }}";
+    $.ajaxSetup({
+        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') }
+    });
+    let websocketNotificationRefreshTimer = null;
+
+    function escapeNotificationHtml(value) {
+        return $('<div>').text(value == null ? '' : String(value)).html();
+    }
+
+    function updateWebsocketNotificationBadge(count) {
+        const badge = $('#websocket-notification-count');
+        badge.text(count);
+        badge.toggle(Number(count) > 0);
+    }
+
+    function fetchWebsocketNotifications() {
+        $.getJSON(websocketNotificationUrl + '/fetch', { limit: 8 }).done(function (response) {
+            updateWebsocketNotificationBadge(response.unread_count || 0);
+            const list = $('#websocket-notifications-list').empty();
+
+            if (!response.items || !response.items.length) {
+                list.append('<div class="notification-loader">No notifications yet.</div>');
+                return;
+            }
+
+            response.items.forEach(function (item) {
+                const unread = !item.read_at;
+                const occurred = item.occurred_at || item.created_at;
+                const date = occurred ? timeAgo(occurred) : 'Just now';
+                const body = item.body || '';
+                const patient = item.event_type === 'reco_message'
+                    ? (item.related_code || item.title)
+                    : (body.split(/\s+(?:was|has|arrived|departed)\b/)[0] || item.title);
+                const detail = patient && body.indexOf(patient) === 0
+                    ? body.substring(patient.length).trim()
+                    : body;
+                const html = '<a href="' + escapeNotificationHtml(item.destination_url || '#') + '"' +
+                    ' class="referral-item websocket-notification-open ' + (unread ? 'unread' : '') + '"' +
+                    ' data-id="' + escapeNotificationHtml(item.id) + '"' +
+                    ' data-type="' + escapeNotificationHtml(item.event_type) + '"' +
+                    ' data-code="' + escapeNotificationHtml(item.related_code) + '"' +
+                    ' data-related-id="' + escapeNotificationHtml(item.related_id) + '">' +
+                    '<div class="referral-left"><img src="' + escapeNotificationHtml(profilePic) + '" class="referral-avatar" alt=""></div>' +
+                    '<div class="referral-right"><div class="referral-top">' +
+                    '<span class="referral-patient">' + escapeNotificationHtml(patient) +
+                    '<span class="patient-tag">' + escapeNotificationHtml(item.title) + '</span></span>' +
+                    '<span class="referral-time">' + escapeNotificationHtml(date) + '</span></div>' +
+                    '<div class="referral-message">' + escapeNotificationHtml(detail) + '</div></div></a>';
+                list.append(html);
+            });
+        });
+    }
+
+    function markAllWebsocketNotificationsRead(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        $.post(websocketNotificationUrl + '/read-all').always(fetchWebsocketNotifications);
+    }
+
+    $(document).on('click', '.websocket-notification-open', function (event) {
+        event.preventDefault();
+        const link = $(this);
+        if (link.data('type') === 'reco_message') {
+            sessionStorage.setItem('reco_payload', JSON.stringify({
+                code: link.data('code'),
+                reco_id: link.data('related-id')
+            }));
+        }
+        $.post(websocketNotificationUrl + '/' + encodeURIComponent(link.data('id')) + '/read')
+            .always(function () {
+                window.location.href = link.attr('href');
+            });
+    });
+
+    $(function () {
+        fetchWebsocketNotifications();
+        if (!window.Echo) return;
+
+        const channels = [
+            ['new_referral', 'NewReferral'],
+            ['reco', 'SocketReco'],
+            ['referral_accepted', 'SocketReferralAccepted'],
+            ['referral_rejected', 'SocketReferralRejected'],
+            ['referral_update', 'SocketReferralUpdate'],
+            ['referral_arrived', 'SocketReferralArrived'],
+            ['referral_departed', 'SocketReferralDeparted'],
+            ['referral_not_arrived', 'SocketReferralNotArrived'],
+            ['referral_admitted', 'SocketReferralAdmitted'],
+            ['referral_discharged', 'SocketReferralDischarged']
+        ];
+
+        channels.forEach(function (channel) {
+            window.Echo.join(channel[0]).listen(channel[1], function () {
+                clearTimeout(websocketNotificationRefreshTimer);
+                websocketNotificationRefreshTimer = setTimeout(fetchWebsocketNotifications, 250);
+            });
+        });
+    });
     
 
 </script>
@@ -585,6 +789,19 @@ $facility_exclude =  \App\Facility::select('id')
         border-radius:4px;
         margin-left:5px;
         font-weight:500;
+    }
+
+    .websocket-notification-count{
+        background-color:#28a745 !important;
+        color:#fff !important;
+    }
+
+    #websocket-notifications-list .referral-patient{
+        color:#337ab7;
+    }
+
+    #websocket-notifications-list .referral-item.unread .referral-patient{
+        color:#337ab7;
     }
 
     .referral-menu{

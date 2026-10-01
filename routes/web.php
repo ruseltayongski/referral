@@ -653,6 +653,12 @@ Route::get('reco/new/{code}', 'FeedbackCtrl@recoNew');
 Route::post('reco/seen', 'FeedbackCtrl@recoSeen');
 Route::get('reco/seen1/{code}', 'FeedbackCtrl@recoSeen1');
 
+// websocket notification history
+Route::get('websocket-notifications', 'WebsocketNotificationController@index');
+Route::get('websocket-notifications/fetch', 'WebsocketNotificationController@fetch');
+Route::post('websocket-notifications/{id}/read', 'WebsocketNotificationController@markRead');
+Route::post('websocket-notifications/read-all', 'WebsocketNotificationController@markAllRead');
+
 // appointment
 Route::post('appointment/create', 'LoginCtrl@createAppointment');
 Route::match(['GET', 'POST'], 'admin/appointment', 'admin\ApptCtrl@appointment');
