@@ -337,7 +337,7 @@ $facility_exclude =  \App\Facility::select('id')
         <li class="dropdown" id="websocket-notification-menu">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" onclick="fetchWebsocketNotifications()" aria-haspopup="true" aria-expanded="false">
                 <!-- <i class="fa fa-bell-o"></i>  -->
-                Alerts
+                Notifications
                 <span class="badge bg-green websocket-notification-count" id="websocket-notification-count" style="display:none;">0</span>
             </a>
             <ul class="dropdown-menu referral-menu">
