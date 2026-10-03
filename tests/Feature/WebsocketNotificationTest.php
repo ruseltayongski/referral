@@ -314,6 +314,22 @@ class WebsocketNotificationTest extends TestCase
         $this->assertNotNull($first->fresh()->read_at);
     }
 
+    public function testClearAllNotificationsDeletesCurrentUsersNotifications()
+    {
+        $this->addUser(1, 10, 'active', 'doctor', null);
+        $this->addUser(2, 20, 'active', 'doctor', null);
+        $this->createNotification(1);
+        $this->createNotification(1, 'doctor');
+        $this->createNotification(2);
+        Session::put('auth', (object) ['id' => 1, 'level' => 'doctor']);
+
+        $response = (new WebsocketNotificationController())->markAllRead();
+
+        $this->assertTrue($response->getData(true)['deleted']);
+        $this->assertSame(0, WebsocketNotification::where('user_id', 1)->count());
+        $this->assertSame(1, WebsocketNotification::where('user_id', 2)->count());
+    }
+
     public function testNotificationRoleMustMatchCurrentAccountRole()
     {
         $this->addUser(1, 10, 'active', 'doctor', null);

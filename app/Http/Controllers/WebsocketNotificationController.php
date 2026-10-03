@@ -84,11 +84,9 @@ class WebsocketNotificationController extends Controller
             return response()->json(['message' => 'Unauthenticated.'], 401);
         }
 
-        $this->userNotifications($user)
-            ->whereNull('read_at')
-            ->update(['read_at' => now()]);
+        $deleted = $this->userNotifications($user)->delete();
 
-        return response()->json(['updated' => true]);
+        return response()->json(['deleted' => (bool) $deleted]);
     }
 
     private function currentUser()

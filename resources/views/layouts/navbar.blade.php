@@ -345,7 +345,7 @@ $facility_exclude =  \App\Facility::select('id')
                     <span>
                         <!-- <i class="fa fa-bell-o"></i>  -->
                     Notifications</span>
-                    <button type="button" class="btn btn-link btn-xs" onclick="markAllWebsocketNotificationsRead(event)">Mark all read</button>
+                    <button type="button" class="btn btn-link btn-xs" onclick="clearAllWebsocketNotifications(event)">Clear notifications</button>
                 </li>
                 <li><div class="referral-scroll" id="websocket-notifications-list"></div></li>
                 <li class="referral-footer"><a href="{{ url('websocket-notifications') }}">View notification history</a></li>
@@ -732,7 +732,7 @@ $facility_exclude =  \App\Facility::select('id')
         });
     }
 
-    function markAllWebsocketNotificationsRead(event) {
+    function clearAllWebsocketNotifications(event) {
         event.preventDefault();
         event.stopPropagation();
         $.post(websocketNotificationUrl + '/read-all').always(fetchWebsocketNotifications);

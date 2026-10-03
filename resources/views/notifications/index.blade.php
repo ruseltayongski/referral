@@ -8,7 +8,7 @@
                 <div class="box-header with-border">
                     <h3 class="box-title">Notification History</h3>
                     <button type="button" class="btn btn-default btn-sm pull-right" id="mark-all-websocket-read">
-                        <i class="fa fa-check"></i> Mark all as read
+                        <i class="fa fa-trash"></i> Clear notifications
                     </button>
                 </div>
                 <div class="box-body table-responsive">
