@@ -1373,6 +1373,7 @@ class ReferralCtrl extends Controller
                 'date_accepted' => date('Y-m-d H:i:s')
             ]);
         $track = Tracking::find($track_id);
+        
 
         $data = array(
             'code' => $track->code,
@@ -1384,6 +1385,8 @@ class ReferralCtrl extends Controller
             'referring_md' => $track->referring_md,
             'action_md' => $user->id,
             'remarks' => isset($req->remarks) ? $req->remarks : "",
+            'appointment' => $track->telemedicine == 1 ? $track->appointmentId : null,
+            'email_sent_status' => $track->telemedicine == 1 ? 'pending' : null,
             'status' => $track->status
         );
 
@@ -1395,6 +1398,7 @@ class ReferralCtrl extends Controller
                 $expiration = now()->addHours(2);
                 if ($track->appointmentId) {
                     $appointmentSchedule = AppointmentSchedule::find($track->appointmentId);
+                            
                     if ($appointmentSchedule && $appointmentSchedule->appointed_date) {
                         $startTime = $appointmentSchedule->appointed_time ?: '00:00:00';
                         $endTime = $appointmentSchedule->appointedTime_to;
@@ -1421,7 +1425,7 @@ class ReferralCtrl extends Controller
                     'display_name' => $track->patient_name,
                     'role'         => 'patient',
                 ]);
-
+                $insert_video_link = Activity::where('id', $activity->id)->update(['video_call_link' => $joinUrl]);
                 $telemedicine_controller->sendConfirmationEmail(
                     $track->appointmentId,
                     $track->patient_id,

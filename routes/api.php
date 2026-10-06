@@ -51,3 +51,10 @@ Route::middleware('signed')->group(function () {
         ->name('api.reco.message.send');
 });
 Route::post('submit/recommendation/{code}', 'TelemedicineApiCtrl@saveMedCert');
+Route::middleware('appointment.email.token')->group(function () {
+    Route::get('/internal/appointment-email-candidates', 'AppointmentCheckApi@checkAppointment');
+    Route::patch(
+        'internal/appointments/{activity_id}/email-status',
+        'AppointmentCheckApi@updateEmailStatus'
+    );
+});

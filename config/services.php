@@ -35,4 +35,6 @@ return [
         'secret' => env('STRIPE_SECRET'),
     ],
 
+    'appointment_email_api_token' => env('APPOINTMENT_EMAIL_API_TOKEN'),
+
 ];

@@ -72,5 +72,6 @@ class Kernel extends HttpKernel
         'eoc_region' => EocRegion::class,
         'auth.or.signed' => \App\Http\Middleware\AuthOrSignedLink::class,
         'signed' => \App\Http\Middleware\ValidateSignature::class,
+        'appointment.email.token' => \App\Http\Middleware\VerifyAppointmentEmailApiToken::class,
     ];
 }
