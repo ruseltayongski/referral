@@ -38,58 +38,77 @@
               </div>
 
               <!-- Existing Slots -->
-              <transition name="fade">
-                <div v-if="slotsVisible" class="slots-container">
-                  <div class="slots-header">
-                    <label>
-                      <i class="fa fa-calendar-check-o"></i>
-                      Available Slots
-                    </label>
-                    <span class="badge-info">{{ filteredSlots.length }} slot{{ filteredSlots.length !== 1 ? 's' : '' }}</span>
-                  </div>
+              <div v-if="slotsVisible" class="slots-container">
+                <div class="slots-header">
+                  <label>
+                    <i class="fa fa-calendar-check-o"></i>
+                    Available Slots
+                  </label>
+                  <span class="badge-info">{{ filteredSlots.length }} slot{{ filteredSlots.length !== 1 ? 's' : '' }}</span>
+                </div>
 
-                  <div v-if="filteredSlots.length > 0" class="existing-slots">
-                    <div
-                      v-for="slot in filteredSlots"
-                      :key="slot.id"
-                      class="slot-item"
-                      :class="[slotAvailabilityClass(slot), { 'slot-selected': selectedSlotId === slot.id }]"
-                      @click="selectSlot(slot)"
-                    >
-                      <div class="slot-time">
-                        <i class="fa fa-clock-o"></i>
-                        {{ slot.time_from }} - {{ slot.time_to }}
-                      </div>
-                      <div class="slot-dept">
-                        <strong>{{ slot.department || 'General' }}</strong>
-                      </div>
-                      <div class="slot-avail">
-                        <i :class="slotIcon(slot)"></i>
-                        <span>{{ slot.availability || 'Available' }}</span>
-                      </div>
+                <div v-if="filteredSlots.length > 0" class="existing-slots">
+                  <div
+                    v-for="slot in filteredSlots"
+                    :key="slot.id"
+                    class="slot-item"
+                    :class="[slotAvailabilityClass(slot), { 'slot-selected': selectedSlotId === slot.id }]"
+                    @click="selectSlot(slot)"
+                  >
+                    <div class="slot-time">
+                      <i class="fa fa-clock-o"></i>
+                      {{ slot.time_from }} - {{ slot.time_to }}
+                    </div>
+                    <div class="slot-dept">
+                      <strong>{{ slot.department || 'General' }}</strong>
+                    </div>
+                    <div class="slot-avail">
+                      <i :class="slotIcon(slot)"></i>
+                      <span>{{ slot.availability || 'Available' }}</span>
                     </div>
                   </div>
-
-                  <div v-else class="no-slots-message">
-                    <i class="fa fa-info-circle fa-2x"></i>
-                    <strong>No existing slots for this date.</strong><br />
-                    <small>You can create a new schedule below.</small>
-                  </div>
                 </div>
-              </transition>
 
-              <!-- Manual Time Entry -->
+                <div v-else class="no-slots-message">
+                  <i class="fa fa-info-circle fa-2x"></i>
+                  <strong>No existing slots for this date.</strong><br />
+                  <small>You can create a new schedule below.</small>
+                </div>
+              </div>
+
+              <!-- Manual Time Entry (optional, collapsible) -->
               <div class="manual-entry">
-                <div v-if="slotsVisible" class="manual-entry-label">Or Create New Schedule:</div>
+                <button
+                  type="button"
+                  class="manual-toggle"
+                  :aria-expanded="manualOpen ? 'true' : 'false'"
+                  @click="toggleManual"
+                >
+                  <i class="fa toggle-icon" :class="manualOpen ? 'fa-angle-down' : 'fa-angle-right'"></i>
+                  <span>Create New Schedule</span>
+                  <span class="optional-tag">Optional</span>
+                </button>
 
-                <div class="form-group">
-                  <label>Time From</label>
-                  <input type="time" class="form-control" v-model="form.timeFrom" required />
-                </div>
+                <div v-if="manualOpen" class="manual-fields">
+                  <div class="form-group">
+                    <label>Time From</label>
+                    <input
+                      type="time"
+                      class="form-control"
+                      v-model="form.timeFrom"
+                      @input="onManualInput"
+                    />
+                  </div>
 
-                <div class="form-group">
-                  <label>Time To</label>
-                  <input type="time" class="form-control" v-model="form.timeTo" required />
+                  <div class="form-group">
+                    <label>Time To</label>
+                    <input
+                      type="time"
+                      class="form-control"
+                      v-model="form.timeTo"
+                      @input="onManualInput"
+                    />
+                  </div>
                 </div>
               </div>
 
@@ -151,6 +170,7 @@ export default {
       isSubmitting: false,
       dateLoading: false,
       slotsVisible: false,
+      manualOpen: false,
 
       // Slot data
       existingSlots: [],
@@ -185,6 +205,11 @@ export default {
         return this.existingSlots.filter(slot => String(slot.facility_id) === String(facility));
       }
       return this.existingSlots;
+    },
+
+    selectedSlot() {
+      if (!this.selectedSlotId) return null;
+      return this.existingSlots.find(slot => slot.id === this.selectedSlotId) || null;
     },
   },
 
@@ -248,7 +273,22 @@ export default {
       this.selectedSlotId = null;
       this.useExistingSlot = false;
       this.slotsVisible = false;
+      this.manualOpen = false;
       this.dateLoading = false;
+    },
+
+    // ─── Manual Entry ────────────────────────────────────────────────────────
+
+    toggleManual() {
+      this.manualOpen = !this.manualOpen;
+    },
+
+    // Typing a custom time means the user is not using an existing slot
+    onManualInput() {
+      if (this.form.timeFrom || this.form.timeTo) {
+        this.selectedSlotId = null;
+        this.useExistingSlot = false;
+      }
     },
 
     // ─── Date Change ─────────────────────────────────────────────────────────
@@ -320,10 +360,19 @@ export default {
         return;
       }
 
+      // Click the selected slot again to deselect it
+      if (this.selectedSlotId === slot.id) {
+        this.selectedSlotId = null;
+        this.useExistingSlot = false;
+        return;
+      }
+
+      // Selecting an existing slot does NOT fill the manual fields
       this.selectedSlotId = slot.id;
-      this.form.timeFrom = slot.time_from;
-      this.form.timeTo = slot.time_to;
       this.useExistingSlot = true;
+      this.form.timeFrom = '';
+      this.form.timeTo = '';
+      this.manualOpen = false;
     },
 
     // ─── Save ─────────────────────────────────────────────────────────────────
@@ -332,10 +381,12 @@ export default {
       if (this.isSubmitting) return;
 
       const { code, date, timeFrom, timeTo } = this.form;
+      const hasSlot = !!this.selectedSlot;
+      const hasManual = !!(timeFrom && timeTo);
 
-      if (!code || !date || !timeFrom || !timeTo) {
+      if (!code || !date || (!hasSlot && !hasManual)) {
         Lobibox.alert({
-          msg: 'Please fill in all schedule fields before saving.',
+          msg: 'Please select a date and either an available slot or a new schedule time.',
           title: 'Incomplete Form',
         });
         return;
@@ -346,14 +397,17 @@ export default {
     },
 
     async submitFollowUp(useExisting) {
+      const slot = this.selectedSlot;
+
       const payload = {
         doctor_id: this.doctorId,
         username: this.username,
         telemedicine: this.form.telemedicine,
         code: this.form.code,
         date: this.form.date,
-        timeFrom: this.form.timeFrom,
-        timeTo: this.form.timeTo,
+        // Times come from the selected slot if one is chosen, otherwise from manual entry
+        timeFrom: slot ? slot.time_from : this.form.timeFrom,
+        timeTo: slot ? slot.time_to : this.form.timeTo,
         followup_facility_telemed: this.form.followupFacilityTelemed,
         Appointment_id: this.form.appointmentId || null,
         configId: this.form.configId || null,
@@ -390,10 +444,6 @@ export default {
             title: 'Error',
           });
           this.isSubmitting = false;
-        }
-      } finally {
-        if (error && error.response?.status !== 409) {
-          // Already handled above
         }
       }
     },
@@ -619,18 +669,56 @@ export default {
   margin-bottom: 10px;
 }
 
-/* ── Manual Entry ───────────────────────────────────────────── */
+/* ── Manual Entry (collapsible) ─────────────────────────────── */
 .manual-entry {
   margin-top: 10px;
   padding-top: 15px;
   border-top: 1px solid #e0e0e0;
 }
 
-.manual-entry-label {
-  font-weight: 600;
-  margin-bottom: 10px;
-  color: #333;
+.manual-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 0;
+  background: none;
+  border: none;
   font-size: 14px;
+  font-weight: 500;
+  font-family: inherit;
+  color: #333;
+  cursor: pointer;
+  text-align: left;
+}
+
+.manual-toggle:hover span:first-of-type {
+  color: #007bff;
+}
+
+.manual-toggle:focus-visible {
+  outline: 2px solid #007bff;
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.toggle-icon {
+  width: 10px;
+  font-size: 16px;
+  color: #6c757d;
+}
+
+.optional-tag {
+  padding: 1px 8px;
+  border-radius: 10px;
+  background-color: #eef0f2;
+  font-size: 11px;
+  font-weight: 500;
+  color: #6c757d;
+}
+
+.manual-fields {
+  margin-top: 15px;
 }
 
 /* ── Footer ─────────────────────────────────────────────────── */
@@ -685,17 +773,6 @@ export default {
 .modal-fade-enter-from,
 .modal-fade-leave-to {
   opacity: 0;
-}
-
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.2s ease, transform 0.2s ease;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-  transform: translateY(-4px);
 }
 
 /* ── Responsive ─────────────────────────────────────────────── */

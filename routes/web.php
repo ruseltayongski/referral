@@ -24,6 +24,15 @@ Route::get('/', 'HomeCtrl@index');
 Route::redirect('Patient', 'login');
 Route::redirect('patient', 'login');
 
+Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('password.email');
+Route::get('password/reset/{token}', function ($token) {
+    return redirect('login?' . http_build_query([
+        'reset_token' => $token,
+        'email'       => request('email'),
+    ]));
+})->name('password.reset');
+Route::post('password/reset', 'Auth\ResetPasswordController@reset')->name('password.update');
+
 Route::match(['GET', 'POST'], 'logout', 'LogoutCtrl@logout');
 Route::get('check/session', 'LogoutCtrl@checkSession');
 

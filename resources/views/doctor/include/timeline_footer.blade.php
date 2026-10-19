@@ -67,7 +67,8 @@ $redirected_upward = DB::table('activity')
             <button class="btn-xs  bg-success btn-flat" id="telemedicine" onclick="openTelemedicine('{{$row->telemedicine}}','{{ $row->referred_from }}',{{ $row->id }}, '{{ $row->code }}', '{{ $row->type }}', {{ $row->action_md_id }}, {{ $latestReferredActivity->id }});"><i class="fa fa-camera"></i> Join</button>
         @endif
         <div id="html_websocket_upward{{ $row->code }}" style="display: inline;"></div>
-        @if($statusExamined->status === 'examined' && $row->telemedicine)
+        
+        @if($statusExamined->status === 'examined' && $row->telemedicine && $row->referred_from != 0)
             <button
                 class="btn btn-warning btn-xs upward-button"
                 id="upward_button{{ $row->code }}"
