@@ -737,15 +737,24 @@
         }
     }
 
-    function telemedicineFollowUpPatient(alreadyReferred, alreadyEnded, examinedPatient, alreadyFollowUp, code, referred_id, alreadyTreated, alreadyUpward,ownfacility,referred_to,user_level) { // I am adding  alreadyTreated and  alreadyUpward
+    function telemedicineFollowUpPatient(alreadyReferred, alreadyEnded, examinedPatient, alreadyFollowUp, code, referred_id, alreadyTreated, alreadyUpward,ownfacility,referred_to,referred_from,user_level) { // I am adding  alreadyTreated and  alreadyUpward
         $("#telemed_follow_code").val(code);//I add this add this to get the followup_id jondy
         $("#telemedicine_follow_id").val(referred_id); //I add this add this to get the followup_id jondy
         $(".telemedicine").val(1);
         const upwardIsCompleted = $('#upward_progress'+code+referred_id).hasClass('completed');
         const treatedIsCompleted = $('#treated_progress'+code+referred_id).hasClass('completed');
         const prescribedIsCompleted = $('#prescribed_progress'+code+referred_id).hasClass('completed');
-        
-        if(referred_to == ownfacility){
+        console.log('Referred to:', referred_to ,
+        'Referred from:', referred_from ,
+        'Own Facility:', ownfacility 
+        ,'referred_id:', referred_id, 
+        'code:', code
+        ,'alreadyTreated:', alreadyTreated
+        ,'alreadyUpward:', alreadyUpward
+        );
+
+
+        if(referred_to == ownfacility && referred_from != 0){
             Lobibox.alert("error",
                 {
                     msg: "You are not authorized to proceed with the follow up.!"
