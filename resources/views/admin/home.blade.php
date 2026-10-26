@@ -81,7 +81,7 @@ $user = Session::get('auth');
         </div>
 
         <div class="jim-content">
-            <h3 class="page-header">Monthly Activity
+            <h3 class="page-header">Monthly Activity test
             </h3>
             <div class="chart">
                 <canvas id="barChart"></canvas>
