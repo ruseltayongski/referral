@@ -828,6 +828,8 @@ Route::group(['middleware' => 'auth'], function () {
         ->middleware('throttle:6,1');
 });
 
+Route::get('file-backup', 'FileBackupController@index')->name('file-backup.index');
+Route::get('file-backup/download', 'FileBackupController@download')->name('file-backup.download');
 // Verify link does not require auth so users can confirm from the email link
 Route::get('/email/verify/{id}/{hash}', 'Auth\VerificationController@verify')
     ->name('verification.verify');

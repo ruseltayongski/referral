@@ -278,6 +278,7 @@ $facility_exclude =  \App\Facility::select('id')
                     <li><a href="{{ url('admin/icd') }}"> ICD-10</a></li>
                     <li><a href="{{ url('admin/appointment') }}"> Appointments </a></li>
                     <li><a href="{{ url('admin/user_feedback') }}"> User Feedbacks </a></li>
+                    <li><a href="{{ url('file-backup') }}"> File Backup </a></li>
                 <!-- <li><a href="{{ url('excel/import') }}"><i class="fa fa-file-excel-o"></i> Import</a></li> -->
                 </ul>
             </li>

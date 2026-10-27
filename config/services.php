@@ -34,6 +34,9 @@ return [
         'key' => env('STRIPE_KEY'),
         'secret' => env('STRIPE_SECRET'),
     ],
+    'file_backup' => [
+       'token' => env('FILE_BACKUP_TOKEN'),
+    ],
 
     'appointment_email_api_token' => env('APPOINTMENT_EMAIL_API_TOKEN'),
 
