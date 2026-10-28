@@ -360,7 +360,7 @@ $appointed_date = $appoitment_sched[0]->appointed_date;
                         </div><br> -->
 
                         <div class="row">
-                            <div class="col-md-12">
+                            <!-- <div class="col-md-12">
                                 <small class="text-success"><b>FILE ATTACHMENTS:</b></small> &emsp;
                                 <button type="button" class="btn btn-md btn-danger" id="remove_files_btn" onclick="removeFiles()">Remove Files</button>
                                 <br><br>
@@ -382,6 +382,9 @@ $appointed_date = $appoitment_sched[0]->appointed_date;
                                         </div>
                                     </div>
                                 </div>
+                            </div> -->
+                            <div class="col-md-12">
+                                <span class="text-note"><b>Attachment Currently Not Available, kindly upload your attachments to reco or chat.</b></span> &emsp;
                             </div>
                         </div>
                     </div>

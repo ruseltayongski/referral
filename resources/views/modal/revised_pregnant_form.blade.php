@@ -866,7 +866,7 @@
                                             </div>
                                         </div><br>
                                         <div class="row">
-                                            <div class="col-md-12">
+                                            <!-- <div class="col-md-12">
                                                 <small class="text-success">FILE ATTACHMENTS:</small> &emsp;
                                                 <button type="button" class="btn btn-md btn-danger" id="preg_remove_files_" onclick="removeFilePregnant(2)">Remove Files</button><br><br>
                                                 <div class="pregnant_file_attachment_">
@@ -886,6 +886,9 @@
                                                         </div>
                                                     </div>
                                                 </div>
+                                            </div> -->
+                                            <div class="col-md-12">
+                                                <span class="text-note"><b>Attachment Currently Not Available, kindly upload your attachments to reco or chat.</b></span> &emsp;
                                             </div>
                                         </div>
                                     </div>

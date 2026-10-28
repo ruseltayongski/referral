@@ -372,7 +372,7 @@ $facilities = \App\Facility::select('id','name')
             </div><br>
 
             <div class="row no_file_attached hide">
-                <div class="col-md-12">
+                <!-- <div class="col-md-12">
                     <small class="text-success"><b>FILE ATTACHMENTS:</b></small> &emsp;
                     <button type="button" class="btn btn-md btn-danger" id="remove_files_btn" onclick="removeFiles(1)">Remove Files</button><br><br>
                     <div class="attachment">
@@ -407,7 +407,8 @@ $facilities = \App\Facility::select('id','name')
                             {{--</div>--}}
                         {{--</div>--}}
                     {{--</div>--}}
-                </div>
+                </div> -->
+                
             </div><br>
 
             <div class="row">

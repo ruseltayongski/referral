@@ -1094,7 +1094,7 @@
                                                 </div>
                                             </div>
                                             <div class="row">
-                                                <div class="col-md-12">
+                                                <!-- <div class="col-md-12">
                                                     <small class="text-success">FILE ATTACHMENTS:</small> &emsp;
                                                     <button type="button" class="btn btn-md btn-danger" id="normal_remove_files" onclick="removeFileNormal()">Remove Files</button><br><br>
                                                     <div class="normal_file_attachment">
@@ -1114,6 +1114,9 @@
                                                             </div>
                                                         </div>
                                                     </div>
+                                                </div> -->
+                                                <div class="col-md-12">
+                                                    <span class="text-note"><b>Attachment Currently Not Available, kindly upload your attachments to reco or chat.</b></span> &emsp;
                                                 </div>
                                             </div><br>
                                         </div>

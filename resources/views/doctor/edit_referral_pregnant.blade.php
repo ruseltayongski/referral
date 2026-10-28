@@ -453,7 +453,7 @@ $facilities = \App\Facility::select('id','name')
                     @endfor
     {{--                <a href="{{ asset($file_path) }}" class="reason" style="font-size: 12pt;" download>{{ $file_name }}</a>--}}
                 </div>
-                <div class="no_file_attached hide">
+                <!-- <div class="no_file_attached hide">
                     <small class="text-success"><b>FILE ATTACHMENTS:</b></small> &emsp;
                     <button type="button" class="btn btn-md btn-danger" id="preg_remove_files" onclick="removeFilePregnant(1)">Remove Files</button><br><br>
                     <div class="pregnant_file_attachment">
@@ -487,7 +487,7 @@ $facilities = \App\Facility::select('id','name')
                             {{--</div>--}}
                         {{--</div>--}}
                     {{--</div>--}}
-                </div>
+                </div> -->
             </div>
         </div>
         <hr />
