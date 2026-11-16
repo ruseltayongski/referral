@@ -3,9 +3,9 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
+class AddTrackingIdToReferralDetailTables extends Migration
 {
-    private array $tables = [
+    private $tables = [
         'past_medical_history',
         'pediatric_history',
         'pertinent_laboratory',
@@ -18,7 +18,7 @@ return new class extends Migration
         'pregnancy',
     ];
 
-    public function up(): void
+    public function up()
     {
         foreach ($this->tables as $tableName) {
             Schema::table($tableName, function (Blueprint $table) {
@@ -27,11 +27,11 @@ return new class extends Migration
         }
     }
 
-    public function down(): void
+    public function down()
     {
         foreach ($this->tables as $tableName) {
             Schema::table($tableName, function (Blueprint $table) {
-                $table->dropIndex([$tableName . '_tracking_id_index']);
+                $table->dropIndex(['tracking_id']);
                 $table->dropColumn('tracking_id');
             });
         }
