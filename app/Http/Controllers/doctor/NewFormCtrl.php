@@ -198,7 +198,7 @@ class NewFormCtrl extends Controller
         return view('revised_form.revised_referral_info', ['data' => $data, 'pregnancy_data' => $pregnancy_data]);
     }
 
-    private function prepareData($request, $patient_id)
+    private function prepareData($request, $patient_id, $tracking_id)
     {
         // Initialize arrays for storing medical history information
         $comorbidities = [];
@@ -981,6 +981,7 @@ class NewFormCtrl extends Controller
             'allergy_drugs_cause' => $request->allergy_drug_cause,
             'allergy_others_cause' => $request->allergy_other_cause,
             'previous_hospitalization' => $request->previous_hospitalization,
+            'tracking_id' => $tracking_id,
         ];
 
         // Prepare pediatric history data for database
@@ -1016,6 +1017,7 @@ class NewFormCtrl extends Controller
             'post_natal_others_cbox' => $request->immu_others_cbox,
             'post_natal_others' => $request->immu_others,
             'post_natal_development_milestones' => $request->prenatal_milestone,
+            'tracking_id' => $tracking_id,
         ];
 
         $obstetric_history = [
@@ -1042,11 +1044,13 @@ class NewFormCtrl extends Controller
             'parity_edc' => $request->parity_edc_ifpregnant,
             'aog_lnmp' => $request->aog_bylnmp,
             'aog_eutz' => $request->aog_byEUTZ,
+            'tracking_id' => $tracking_id,
         ];
         $pertinent_lab = [
             'patient_id' => $patient_id,
             'pertinent_laboratory_and_procedures' => $pertinent_methods,
             'lab_procedure_other' => $request->lab_procedure_other,
+            'tracking_id' => $tracking_id,
         ];
 
         $personal_history = [
@@ -1063,6 +1067,7 @@ class NewFormCtrl extends Controller
             'illicit_drugs_taken' => $request->illicit_drugs_token,
             'illicit_drugs_quit_year' => $request->drugs_year_quit,
             'current_medications' => $request->current_meds,
+            'tracking_id' => $tracking_id
         ];
         $review_of_system = [
             'patient_id' => $patient_id,
@@ -1100,9 +1105,11 @@ class NewFormCtrl extends Controller
             'endocrine_others' => $request->rs_endocrine_others,
             'psychiatric' => $rs_psychiatric_methods,
             'psychiatric_others' => $request->rs_psychiatric_others,
+            'tracking_id' => $tracking_id
         ];
         $nutritional_status = [
             'patient_id' => $patient_id,
+            'tracking_id' => $tracking_id,
             'diet' => $request->diet_radio,
             'specify_diets' => $request->diet,
         ];
@@ -1113,10 +1120,12 @@ class NewFormCtrl extends Controller
             'verbal_response' => $request->verbal_radio,
             'eye_response' => $request->eye_radio,
             'gsc_score' => $request->gcs_score,
+            'tracking_id' => $tracking_id
 
         ];
         $vital_signs = [
             'patient_id' => $patient_id,
+            'tracking_id' => $tracking_id,
             'temperature' => $request->vital_temp,
             'pulse_rate' => $request->vital_pulse,
             'respiratory_rate' => $request->vital_respi_rate,
@@ -1137,7 +1146,7 @@ class NewFormCtrl extends Controller
         ];
     }
 
-    public function saveReferral(Request $request, $type)
+ public function saveReferral(Request $request, $type)
     {
         $user = Session::get('auth');
         if($request->telemedicine) {
@@ -1204,7 +1213,7 @@ class NewFormCtrl extends Controller
             // }
 
             $file_paths = "";
-            if ($_FILES["file_upload"]["name"]) {
+           if (isset($_FILES['file_upload']['name']) && !empty(array_filter((array) $_FILES['file_upload']['name']))) {
 
                 $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'pdf', 'docx', 'xlsx'];
                 $allowedMimes = [
@@ -1281,11 +1290,18 @@ class NewFormCtrl extends Controller
             $form->file_path = $file_paths;
             $form->save();
 
-            foreach($request->icd_ids as $i) {
-                $icd = new Icd();
-                $icd->code = $form->code;
-                $icd->icd_id = $i;
-                $icd->save();
+            // foreach($request->icd_ids as $i) {
+            //     $icd = new Icd();
+            //     $icd->code = $form->code;
+            //     $icd->icd_id = $i;
+            //     $icd->save();
+            // }
+
+            foreach (array_filter((array) $request->icd_ids) as $i) {
+                Icd::create([
+                    'code'   => $form->code,
+                    'icd_id' => $i,
+                ]);
             }
 
             //if($req->referred_facility == 790 && $user->id == 1687) {
@@ -1306,7 +1322,7 @@ class NewFormCtrl extends Controller
                 );
                 ApiController::notifierPushNotification($this->referred_patient_data);
             }//push notification for cebu south medical center
-            self::newFormSave($request);
+            // self::newFormSave($request);
             self::addTracking($code,$patient_id,$user,$request,$type,$form->id,'refer');
          
         }else if ($type == "pregnant") {
@@ -1384,7 +1400,7 @@ class NewFormCtrl extends Controller
             //     }
             // }
             $file_paths = "";
-            if ($_FILES["file_upload"]["name"]) {
+            if (isset($_FILES['file_upload']['name']) && !empty(array_filter((array) $_FILES['file_upload']['name']))) {
 
                 $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'pdf', 'docx', 'xlsx'];
                 $allowedMimes = [
@@ -1460,13 +1476,18 @@ class NewFormCtrl extends Controller
             $form->file_path = $file_paths;
             $form->save();
 
-            foreach ($request->icd_ids as $i) {
-                $icd = new Icd();
-                $icd->code = $form->code;
-                $icd->icd_id = $i;
-                $icd->save();
+            // foreach ($request->icd_ids as $i) {
+            //     $icd = new Icd();
+            //     $icd->code = $form->code;
+            //     $icd->icd_id = $i;
+            //     $icd->save();
+            // }
+           foreach (array_filter((array) $request->icd_ids) as $i) {
+                Icd::create([
+                    'code'   => $form->code,
+                    'icd_id' => $i,
+                ]);
             }
-           
 
             if($request->referred_facility == 790 || $request->referred_facility == 23) {
                 $patient = Patients::find($patient_id);
@@ -1486,8 +1507,8 @@ class NewFormCtrl extends Controller
                 ApiController::notifierPushNotification($this->referred_patient_data);
             }
             
-            self::newFormSave($request);
-            self::newFormPregnant($request);
+            // self::newFormSave($request);
+            // self::newFormPregnant($request);
             self::addTracking($code,$patient_id,$user,$request,$type,$form->id);
         }
         if($request->referred_facility == 790 || $request->referred_facility == 23) {
@@ -2006,7 +2027,7 @@ class NewFormCtrl extends Controller
         }
     }
 
-    public function getViewForm_normal($id,$referral_status,$form_type){
+   public function getViewForm_normal($id,$referral_status,$form_type){
         $track = Tracking::select('code', 'status', 'referred_from as referring_fac_id')->where('id', $id)->first();
         $icd = Icd::select('icd10.code', 'icd10.description', 'icd.icd_id as id')
             ->join('icd10', 'icd10.id', '=', 'icd.icd_id')
@@ -2047,19 +2068,63 @@ class NewFormCtrl extends Controller
         $patient_id = Tracking::select('patient_id')->where('id', $id)->first()->patient_id;
         $type =  Tracking::select('type')->where('id', $id)->first()->type;
         $status = Tracking::select('status')->where('id', $id)->first()->status;
-        $past_medical_history = PastMedicalHistory::where('patient_id', $patient_id)->first();
-        $personal_and_social_history = PersonalAndSocialHistory::where('patient_id', $patient_id)->first();
-        $pertinent_laboratory = PertinentLaboratory::where('patient_id', $patient_id)->first();
-        $review_of_system = ReviewOfSystems::where('patient_id', $patient_id)->first();
-        $nutritional_status = NutritionalStatus::where('patient_id', $patient_id)->first();
-        $latest_vital_signs = LatestVitalSigns::where('patient_id', $patient_id)->first();
-        $glasgocoma_scale = GlasgoComaScale::where('patient_id', $patient_id)->first();
-        $obstetric_and_gynecologic_history = ObstetricAndGynecologicHistory::where('patient_id', $patient_id)->first();
-        $pediatric_history = PediatricHistory::where('patient_id', $patient_id)->first();
-        $pregnancy_data = Pregnancy::where('patient_id', $patient_id)->get(); 
+        $past_medical_history = PastMedicalHistory::where('patient_id', $patient_id)    
+        ->where(function ($query) use ($id) {
+                $query->where('tracking_id', $id)
+                ->orWhereNull('tracking_id');
+            })->first();
+        $personal_and_social_history = PersonalAndSocialHistory::where('patient_id', $patient_id)
+            ->where(function ($query) use ($id) {
+                $query->where('tracking_id', $id)
+                ->orWhereNull('tracking_id');
+            })->first();
+        $pertinent_laboratory = PertinentLaboratory::where('patient_id', $patient_id)
+            ->where(function ($query) use ($id) {
+                $query->where('tracking_id', $id)
+                ->orWhereNull('tracking_id');
+            })->first();
+        $review_of_system = ReviewOfSystems::where('patient_id', $patient_id)
+            ->where(function ($query) use ($id) {
+                $query->where('tracking_id', $id)
+                ->orWhereNull('tracking_id');
+            })->first();
+        $nutritional_status = NutritionalStatus::where('patient_id', $patient_id)
+            ->where(function ($query) use ($id) {
+                $query->where('tracking_id', $id)
+                ->orWhereNull('tracking_id');
+            })->first();
+        $latest_vital_signs = LatestVitalSigns::where('patient_id', $patient_id)
+         ->where(function ($query) use ($id) {
+                $query->where('tracking_id', $id)
+                ->orWhereNull('tracking_id');
+            })->first();
+        $glasgocoma_scale = GlasgoComaScale::where('patient_id', $patient_id)
+            ->where(function ($query) use ($id) {
+                    $query->where('tracking_id', $id)
+                    ->orWhereNull('tracking_id');
+                })->first();
+        $obstetric_and_gynecologic_history = ObstetricAndGynecologicHistory::where('patient_id', $patient_id)
+            ->where(function ($query) use ($id) {
+                $query->where('tracking_id', $id)
+                ->orWhereNull('tracking_id');
+            })->first();
+        $pediatric_history = PediatricHistory::where('patient_id', $patient_id)
+            ->where(function ($query) use ($id) {
+                $query->where('tracking_id', $id)
+                ->orWhereNull('tracking_id');
+            })->first();
+        $pregnancy_data = Pregnancy::where('patient_id', $patient_id)
+            ->where(function ($query) use ($id) {
+                $query->where('tracking_id', $id)
+                ->orWhereNull('tracking_id');
+            })->get();
         $obstetetric_parity_date = ObstetricAndGynecologicHistory::select( DB::raw("DATE_FORMAT(parity_lnmp, '%M %d, %Y %h:%i %p') as parity_lnmp"),
         DB::raw("DATE_FORMAT(parity_edc, '%M %d, %Y %h:%i %p') as parity_edc"),
-        )->where('patient_id', $patient_id)->first();
+        )->where('patient_id', $patient_id)
+        ->where(function ($query) use ($id) {
+                $query->where('tracking_id', $id)
+                ->orWhereNull('tracking_id');
+            })->first();
        
         $referred_to = $form && isset($form->referred_to) ? $form->referred_to : null;
         
@@ -2293,10 +2358,10 @@ class NewFormCtrl extends Controller
         }
     }
 
-    public function newFormPregnant($request){
+    public function newFormPregnant($request, $tracking_id){
         $patient_id = $request->patient_id;
 
-        $data = $this->prepareData($request, $patient_id);
+        $data = $this->prepareData($request, $patient_id, $tracking_id);
         ObstetricAndGynecologicHistory::create($data['obstetric_history']);
         // PediatricHistory::create($data['pediatric_history']);
 
@@ -2343,11 +2408,11 @@ class NewFormCtrl extends Controller
         
     }
 
-    public function newFormSave($request){
+    public function newFormSave($request, $tracking_id){
         // new save form
         $patient_id = $request->patient_id;
 
-        $data = $this->prepareData($request, $patient_id);
+        $data = $this->prepareData($request, $patient_id, $tracking_id);
 
         PastMedicalHistory::create($data['past_medical_history_data']);
         PediatricHistory::create($data['pediatric_history']);
@@ -2400,7 +2465,6 @@ class NewFormCtrl extends Controller
             }
         }
         
-
     }
 
     public function addTracking($code, $patient_id, $user, $req, $type, $form_id, $status='')
@@ -2433,7 +2497,13 @@ class NewFormCtrl extends Controller
         }
     
         $tracking = Tracking::updateOrCreate($match, $track);
-    
+        
+        if($type == 'normal'){
+            self::newFormSave($req, $tracking->id);
+        }else if($type == 'pregnant'){
+            self::newFormSave($req, $tracking->id);
+            self::newFormPregnant($req, $tracking->id);
+        }
         $activity = array(
             'code' => $code,
             'patient_id' => $patient_id,
@@ -2490,7 +2560,7 @@ class NewFormCtrl extends Controller
 
     public function updateReferral(Request $request, $patient_id,$id,$type,$status)
     { 
-        $data = $this->prepareData($request, $patient_id);
+        $data = $this->prepareData($request, $patient_id, $id);
   
         if ($type === "normal"){
          
