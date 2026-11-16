@@ -21,15 +21,17 @@
             </div>
             <div class="modal-body">
                 <!-- <button  data-target="#nonPregnantChooseVersionModal" data-backdrop="static" data-toggle="modal" type="button" class="btn btn-warning col-sm-6"> -->
-                <button data-backdrop="static" data-toggle="modal" type="button" class="btn btn-warning col-sm-6" onclick="openNewForms('normal')">    
-                    <img src="{{ url('resources/img/female.png') }}" width="100" />
+                <!-- <button data-backdrop="static" data-toggle="modal" type="button" class="btn btn-warning col-sm-6" onclick="openNewForms('normal')">     -->
+                <button data-target="#revisednormalFormModal" data-backdrop="static" data-toggle="modal" type="button" class="btn btn-warning col-sm-6">
+                <img src="{{ url('resources/img/female.png') }}" width="100" />
                     <br />
                     Non-Pregnant
                 </button>
                 <!-- <button data-target="#pregnantchooseVersionModal" data-backdrop="static" data-toggle="modal" type="button" class="btn btn-info col-sm-6"> -->
                
-                <button id="pregnantButton" data-target="#pregnantchooseVersionModal" data-backdrop="static" data-toggle="modal" type="button" class="btn btn-info col-sm-6" onclick="openNewForms('pregnant')">    
-                    <img src="{{ url('resources/img/pregnant.png') }}" width="100" />
+                <!-- <button id="pregnantButton" data-target="#pregnantchooseVersionModal" data-backdrop="static" data-toggle="modal" type="button" class="btn btn-info col-sm-6" onclick="openNewForms('pregnant')">     -->
+                <button data-target="#revisedpregnantFormModal" data-backdrop="static" data-toggle="modal" type="button" class="btn btn-info col-sm-6" onclick="openNewForms('pregnant')"> 
+                <img src="{{ url('resources/img/pregnant.png') }}" width="100" />
                     <br />
                    Pregnant
                 </button>
