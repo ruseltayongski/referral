@@ -1290,19 +1290,19 @@ class NewFormCtrl extends Controller
             $form->file_path = $file_paths;
             $form->save();
 
-            // foreach($request->icd_ids as $i) {
-            //     $icd = new Icd();
-            //     $icd->code = $form->code;
-            //     $icd->icd_id = $i;
-            //     $icd->save();
-            // }
-
-            foreach (array_filter((array) $request->icd_ids) as $i) {
-                Icd::create([
-                    'code'   => $form->code,
-                    'icd_id' => $i,
-                ]);
+            foreach($request->icd_ids as $i) {
+                $icd = new Icd();
+                $icd->code = $form->code;
+                $icd->icd_id = $i;
+                $icd->save();
             }
+
+            // foreach (array_filter((array) $request->icd_ids) as $i) {
+            //     Icd::create([
+            //         'code'   => $form->code,
+            //         'icd_id' => $i,
+            //     ]);
+            // }
 
             //if($req->referred_facility == 790 && $user->id == 1687) {
             if($request->referred_facility == 790 || $request->referred_facility == 23) {
@@ -1476,18 +1476,18 @@ class NewFormCtrl extends Controller
             $form->file_path = $file_paths;
             $form->save();
 
-            // foreach ($request->icd_ids as $i) {
-            //     $icd = new Icd();
-            //     $icd->code = $form->code;
-            //     $icd->icd_id = $i;
-            //     $icd->save();
-            // }
-           foreach (array_filter((array) $request->icd_ids) as $i) {
-                Icd::create([
-                    'code'   => $form->code,
-                    'icd_id' => $i,
-                ]);
+            foreach ($request->icd_ids as $i) {
+                $icd = new Icd();
+                $icd->code = $form->code;
+                $icd->icd_id = $i;
+                $icd->save();
             }
+        //    foreach (array_filter((array) $request->icd_ids) as $i) {
+        //         Icd::create([
+        //             'code'   => $form->code,
+        //             'icd_id' => $i,
+        //         ]);
+        //     }
 
             if($request->referred_facility == 790 || $request->referred_facility == 23) {
                 $patient = Patients::find($patient_id);

@@ -114,7 +114,7 @@ class PrintNewFormCtrl extends Controller
     public function printNewFormPDF($pdf,$patient_id,$data,$comor_dataArray, $allergies_dataArray, $heredo_dataArray,$patients_name,$form_type){
         
         // DIAGNOSIS
-
+            // dd($data);
           if (!empty($data->form['form']->other_diagnoses) || !empty($data->form['form']->other_diagnoses) || !empty($data->form['form']->diagnosis) || !empty($data->icd[0])) {
             $this->titleHeader($pdf, "DIAGNOSIS");
             if (isset($data->icd[0])) {
