@@ -6,6 +6,7 @@ use App\Http\Controllers\doctor\NewFormCtrl;
 
 use App\User;
 use App\Tracking;
+use App\Activity;
 use App\Department;
 use App\Facility;
 use App\PatientForm;
@@ -36,11 +37,16 @@ class PrintNewFormCtrl extends Controller
         'dis_clinical_status',
         'dis_sur_category')->where('code',$tracking_data->code)->first();
         $pregnant_form = PregnantForm::select('referred_to','department_id','referred_by')->where('code', $tracking_data->code)->first();
-        $referred_to = Facility::select('name','address')->where('id',$pregnant_form->referred_to)->first();
-        $referred_to_normal = Facility::select('name','address')->where('id',$patients_form->referred_to)->first();
+        // $referred_to = Facility::select('name','address')->where('id',$pregnant_form->referred_to)->first();
+        $referring_facility_data = Activity::select('referred_to','status')->where('code', $tracking_data->code)->latest('id')->first();
+          $referred_to = Facility::select('name','address')->where('id',$referring_facility_data->referred_to)->first();
+        $referred_to_normal = Facility::select('name','address')->where('id',$referring_facility_data->referred_to)->first();
         $department = Department::select('description')->where('id',$pregnant_form->department_id)->first();
         $department_normal = Department::select('description')->where('id',$patients_form->department_id)->first();
+
+        // dd($referring_facility_data);
         $referring_facility_normal = Facility::select('name','contact','address')->where('id',$patients_form->referring_facility)->first();
+        // $referring_facility_normal = Facility::select('name','contact','address')->where('id',$referring_facility_data->referred_to)->first();
         $referring_md = User::select('fname','mname','lname')->where('id',$pregnant_form->referred_by)->first();
         $patients_name = Patients::select('fname','mname','lname','dob', 'brgy', 'province', 'muncity','region','sex','civil_status','phic_id')->where('id',$patient_id)->first();
         $referring_md_name = 'Dr. '. $referring_md->fname . ', ' . $referring_md->mname . ', ' . $referring_md->lname; 
@@ -73,7 +79,7 @@ class PrintNewFormCtrl extends Controller
         $pdf->setTopMargin(10);
         $pdf->setTitle($woman_name .': '.$form_type.' '.$patient_id.'-'.$track_id);
         $pdf->addPage();
-   
+       
         if ($form_type === 'normal'){ 
         $data = NewFormCtrl::fetchDataNormal($patient_id,$track_id);
         self::printNormal($pdf,
@@ -692,7 +698,7 @@ class PrintNewFormCtrl extends Controller
            if(!empty($referring_facility_normal->name)){$pdf->MultiCell(0, 7, self::black($pdf, "Name of Referring Facility: ") . self::orange($pdf, utf8_decode($referring_facility_normal->name), "Name of Referring Facility:"), 0, 'L');}
            if(!empty($referring_facility_normal->contact)){$pdf->MultiCell(0, 7, self::black($pdf, "Facility Contact #: ") . self::orange($pdf, $referring_facility_normal->contact, "Facility Contact #:"), 0, 'L');}
            if(!empty($referring_facility_normal->address)){$pdf->MultiCell(0, 7, self::black($pdf, "Address: ") . self::orange($pdf, utf8_decode($referring_facility_normal->address), "Address:"), 0, 'L');}
-    
+            
            if(!empty($referred_to_normal->name)){$pdf->MultiCell($x / 2, 7, self::black($pdf, "Referred to: ") . self::orange($pdf, utf8_decode($referred_to_normal->name), "Referred to:"), 0, 'L');}
             $y = $pdf->getY();
             $pdf->SetXY($x / 2 + 10, $y - 7);
