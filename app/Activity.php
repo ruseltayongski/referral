@@ -23,7 +23,7 @@ class Activity extends Model
     }
 
     public function labRequest() {
-        return $this->hasMany(labRequest::class, 'activity_id', 'id');
+        return $this->hasMany(LabRequest::class, 'activity_id', 'id');
     }
 
   public function tracking() {
